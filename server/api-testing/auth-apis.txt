@@ -1,0 +1,26 @@
+REGISTER
+POST http://localhost:5000/api/auth/register
+
+{
+  "name": "Treesa",
+  "email": "treesa@gmail.com",
+  "password": "123456"
+}
+
+-----------------------------------
+
+LOGIN
+POST http://localhost:5000/api/auth/login
+
+{
+  "email": "treesa@gmail.com",
+  "password": "123456"
+}
+
+-----------------------------------
+
+CURRENT USER
+GET http://localhost:5000/api/auth/me
+
+Authorization:
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTQ3YjRhZTJlNjVmMzBjY2I4Yjg2MyIsImlhdCI6MTc3OTczMDI1NywiZXhwIjoxNzgyMzIyMjU3fQ.ICBfKk-GpAZd-VTqS3gCf6VWBzxqPEPz5HdSJl6E3MA

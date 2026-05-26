@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+
+    /* Base folder */
+
+    "baseUrl": "./src",
+
+    /* Path aliases */
+
+    "paths": {
+
+      "@/*": ["*"],
+
+      "@/components/*": [
+        "components/*"
+      ],
+
+      "@/pages/*": [
+        "pages/*"
+      ],
+
+      "@/routes/*": [
+        "routes/*"
+      ],
+
+      "@/redux/*": [
+        "redux/*"
+      ],
+
+      "@/hooks/*": [
+        "hooks/*"
+      ],
+
+      "@/services/*": [
+        "services/*"
+      ],
+
+      "@/utils/*": [
+        "utils/*"
+      ],
+
+      "@/styles/*": [
+        "styles/*"
+      ],
+
+      "@/config/*": [
+        "config/*"
+      ],
+
+      "@/constants/*": [
+        "constants/*"
+      ],
+
+      "@/assets/*": [
+        "assets/*"
+      ]
+    }
+  },
+
+  "exclude": [
+
+    "node_modules",
+
+    "dist"
+  ]
+}

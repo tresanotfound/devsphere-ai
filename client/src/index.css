@@ -1,0 +1,294 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GOOGLE FONT */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* RESET */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ROOT */
+
+:root {
+
+  --primary: #b9ff66;
+
+  --dark: #071028;
+
+  --card: rgba(17, 24, 39, 0.7);
+
+  --border: rgba(255,255,255,0.08);
+}
+
+/* BODY */
+
+body {
+
+  font-family: 'Inter', sans-serif;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(185,255,102,0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59,130,246,0.08),
+      transparent 30%
+    ),
+    #071028;
+
+  color: white;
+
+  overflow-x: hidden;
+
+  min-height: 100vh;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #081028;
+}
+
+::-webkit-scrollbar-thumb {
+
+  background: linear-gradient(
+    to bottom,
+    #b9ff66,
+    #7cf29a
+  );
+
+  border-radius: 999px;
+}
+
+/* LINKS */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* GLASS CARD */
+
+.glass-card {
+
+  background: rgba(17,24,39,0.55);
+
+  backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.35);
+
+  border-radius: 24px;
+}
+
+/* GLOW */
+
+.green-glow {
+
+  box-shadow:
+    0 0 30px rgba(185,255,102,0.35);
+}
+
+/* HOVER */
+
+.hover-lift {
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.hover-lift:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.35);
+}
+
+/* BUTTON */
+
+.primary-btn {
+
+  background: linear-gradient(
+    135deg,
+    #b9ff66,
+    #7cf29a
+  );
+
+  color: black;
+
+  font-weight: 700;
+
+  border-radius: 18px;
+
+  transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+
+  transform: scale(1.04);
+
+  box-shadow:
+    0 10px 30px rgba(185,255,102,0.35);
+}
+
+/* DARK THEME */
+
+.dark {
+
+  --bg-primary: #071028;
+
+  --bg-secondary: rgba(17,24,39,0.7);
+
+  --text-primary: white;
+
+  --text-secondary: #9ca3af;
+
+  --border-color: rgba(255,255,255,0.08);
+}
+
+/* LIGHT THEME */
+
+.light {
+
+  --bg-primary: #f3f4f6;
+
+  --bg-secondary: rgba(255,255,255,0.7);
+
+  --text-primary: #111827;
+
+  --text-secondary: #4b5563;
+
+  --border-color: rgba(0,0,0,0.08);
+}
+
+/* BODY */
+
+body {
+
+  background: var(--bg-primary);
+
+  color: var(--text-primary);
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* GLASS CARD */
+
+.glass-card {
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border-color);
+
+  backdrop-filter: blur(18px);
+
+  border-radius: 24px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b9ff66;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body {
+
+  background: #020817;
+
+  color: white;
+
+  transition: all 0.3s ease;
+}
+
+.light body {
+
+  background: #f3f4f6;
+
+  color: black;
+}
+
+/* GLASS CARD */
+
+.glass-card {
+
+  background: rgba(255,255,255,0.05);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(20px);
+
+  border-radius: 28px;
+
+  transition: all 0.3s ease;
+}
+
+.light .glass-card {
+
+  background: rgba(255,255,255,0.75);
+
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* INPUTS */
+
+input {
+
+  color: white;
+}
+
+.light input {
+
+  color: black;
+}
+
+/* PLACEHOLDER */
+
+input::placeholder {
+
+  color: #9ca3af;
+}
+
+/* SIDEBAR */
+
+.light aside {
+
+  background: rgba(255,255,255,0.8);
+
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+
+/* TOPBAR */
+
+.light header {
+
+  background: rgba(255,255,255,0.7);
+
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
