@@ -1,99 +1,460 @@
-import MessageBubble from '../MessageBubble/MessageBubble';
-import TypingIndicator from '../TypingIndicator/TypingIndicator';
-import EmojiPicker from '../EmojiPicker/EmojiPicker';
+// client/src/components/chat/ChatWindow/ChatWindow.jsx
 
-function ChatWindow() {
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-  const messages = [
-    {
-      sender: 'Treesa',
-      message: 'Hey team 👋',
-      isOwnMessage: true,
-    },
+import {
+  FiSend,
+} from "react-icons/fi";
 
-    {
-      sender: 'Alex',
-      message: 'Dashboard UI looks amazing!',
-      isOwnMessage: false,
-    },
-  ];
+import MessageBubble
+from "../MessageBubble/MessageBubble";
+
+import TypingIndicator
+from "../TypingIndicator/TypingIndicator";
+
+function ChatWindow({
+
+  selectedUser,
+
+  messages,
+
+  onSendMessage,
+
+  currentUser,
+
+  onlineUsers,
+
+}) {
+
+  const [
+    text,
+    setText,
+  ] = useState("");
+
+  const [
+    typing,
+    setTyping,
+  ] = useState(false);
+
+  const messagesEndRef =
+    useRef(null);
+
+
+
+  /* =========================================
+     AUTO SCROLL
+  ========================================= */
+
+  useEffect(() => {
+
+    messagesEndRef.current
+      ?.scrollIntoView({
+
+        behavior:
+          "smooth",
+      });
+
+  }, [messages]);
+
+
+
+  /* =========================================
+     SEND MESSAGE
+  ========================================= */
+
+  const handleSubmit =
+    (e) => {
+
+      e.preventDefault();
+
+      if (!text.trim())
+        return;
+
+      onSendMessage(text);
+
+      setText("");
+    };
+
+
+
+  /* =========================================
+     ONLINE STATUS
+  ========================================= */
+
+  const isOnline =
+
+    selectedUser
+
+    &&
+
+    onlineUsers.includes(
+      selectedUser._id
+    );
+
+
+
+  /* =========================================
+     EMPTY STATE
+  ========================================= */
+
+  if (!selectedUser) {
+
+    return (
+
+      <div
+        className="
+          glass-card
+          rounded-3xl
+          flex
+          flex-col
+          items-center
+          justify-center
+          h-full
+          text-center
+          p-10
+        "
+      >
+
+        <div
+          className="
+            w-28
+            h-28
+            rounded-full
+            bg-[#b9ff66]/20
+            flex
+            items-center
+            justify-center
+            text-6xl
+            mb-6
+          "
+        >
+          💬
+        </div>
+
+        <h2
+          className="
+            text-4xl
+            font-extrabold
+            text-black
+            dark:text-white
+          "
+        >
+          Select a Conversation
+        </h2>
+
+        <p
+          className="
+            mt-4
+            text-gray-600
+            dark:text-gray-400
+            max-w-lg
+          "
+        >
+          Start collaborating with
+          your team in realtime 🚀
+        </p>
+
+      </div>
+    );
+  }
+
+
 
   return (
+
     <div
       className="
-        bg-gray-900
-        rounded-2xl
-        border
-        border-gray-800
-        p-6
+        glass-card
+        rounded-3xl
         flex
         flex-col
-        h-[700px]
+        h-full
+        overflow-hidden
       "
     >
 
-      {/* Header */}
+      {/* HEADER */}
 
-      <h2
+      <div
         className="
-          text-3xl
-          font-bold
-          text-white
-          mb-6
+          flex
+          items-center
+          justify-between
+          p-6
+          border-b
+          border-black/10
+          dark:border-white/10
         "
       >
-        Team Chat
-      </h2>
 
-      {/* Messages */}
+        <div
+          className="
+            flex
+            items-center
+            gap-4
+          "
+        >
 
-      <div className="flex-1 space-y-5 overflow-y-auto">
+          {/* AVATAR */}
 
-        {messages.map((msg, index) => (
+          <div className="relative">
 
-          <MessageBubble
-            key={index}
-            sender={msg.sender}
-            message={msg.message}
-            isOwnMessage={msg.isOwnMessage}
+            <img
+
+              src={
+                selectedUser.avatar
+                ||
+                `https://ui-avatars.com/api/?name=${selectedUser.name}`
+              }
+
+              alt={selectedUser.name}
+
+              className="
+                w-14
+                h-14
+                rounded-full
+                border-2
+                border-[#b9ff66]
+              "
+            />
+
+            {/* ONLINE */}
+
+            {
+
+              isOnline
+
+              && (
+
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    right-0
+                    w-4
+                    h-4
+                    rounded-full
+                    bg-green-500
+                    border-2
+                    border-black
+                  "
+                />
+              )
+            }
+
+          </div>
+
+
+
+          {/* INFO */}
+
+          <div>
+
+            <h2
+              className="
+                text-2xl
+                font-bold
+                text-black
+                dark:text-white
+              "
+            >
+              {selectedUser.name}
+            </h2>
+
+            <p
+              className="
+                text-sm
+                text-gray-600
+                dark:text-gray-400
+              "
+            >
+
+              {
+
+                isOnline
+
+                  ? "Online"
+
+                  : "Offline"
+              }
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      {/* MESSAGES */}
+
+      <div
+        className="
+          flex-1
+          overflow-y-auto
+          p-6
+          space-y-4
+        "
+      >
+
+        {
+
+          messages.length === 0
+
+          && (
+
+            <div
+              className="
+                h-full
+                flex
+                items-center
+                justify-center
+              "
+            >
+
+              <p
+                className="
+                  text-gray-500
+                "
+              >
+                No messages yet 🚀
+              </p>
+
+            </div>
+          )
+        }
+
+
+
+        {
+
+          messages.map(
+
+            (message, index) => (
+
+              <MessageBubble
+
+                key={
+                  message._id
+                  || index
+                }
+
+                message={message}
+
+                isOwn={
+
+                  message.sender?._id
+                  === currentUser._id
+
+                  ||
+
+                  message.sender
+                  === currentUser._id
+                }
+              />
+            ))
+        }
+
+
+
+        {/* TYPING */}
+
+        {
+
+          typing
+
+          && <TypingIndicator />
+        }
+
+
+
+        <div ref={messagesEndRef} />
+
+      </div>
+
+
+
+      {/* INPUT */}
+
+      <form
+
+        onSubmit={handleSubmit}
+
+        className="
+          p-6
+          border-t
+          border-black/10
+          dark:border-white/10
+        "
+      >
+
+        <div
+          className="
+            flex
+            items-center
+            gap-4
+          "
+        >
+
+          {/* INPUT */}
+
+          <input
+
+            type="text"
+
+            value={text}
+
+            onChange={(e) =>
+
+              setText(
+                e.target.value
+              )
+            }
+
+            placeholder="Type your message..."
+
+            className="
+              glass-input
+              flex-1
+            "
           />
 
-        ))}
 
-      </div>
 
-      {/* Typing */}
+          {/* SEND BUTTON */}
 
-      <div className="mt-4">
+          <button
 
-        <TypingIndicator />
+            type="submit"
 
-      </div>
+            className="
+              w-14
+              h-14
+              rounded-2xl
+              bg-[#b9ff66]
+              text-black
+              flex
+              items-center
+              justify-center
+              text-2xl
+              hover:scale-105
+              transition
+            "
+          >
 
-      {/* Input */}
+            <FiSend />
 
-      <div className="flex gap-4 mt-6">
+          </button>
 
-        <input
-          type="text"
-          placeholder="Type message..."
-          className="
-            flex-1
-            px-5
-            py-4
-            rounded-xl
-            bg-gray-800
-            text-white
-            border
-            border-gray-700
-            focus:outline-none
-            focus:border-[#b9ff66]
-          "
-        />
+        </div>
 
-        <EmojiPicker />
-
-      </div>
+      </form>
 
     </div>
   );

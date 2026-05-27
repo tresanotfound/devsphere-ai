@@ -1,36 +1,91 @@
-function MarkdownPreview() {
+// client/src/components/notes/MarkdownPreview/MarkdownPreview.jsx
+
+import ReactMarkdown
+from "react-markdown";
+
+function MarkdownPreview({
+
+  content,
+
+}) {
 
   return (
+
     <div
       className="
-        bg-gray-900
-        rounded-2xl
-        border
-        border-gray-800
-        p-6
+        glass-card
+        p-8
+        rounded-3xl
+        overflow-hidden
       "
     >
 
-      <h2
+      {/* HEADER */}
+
+      <div className="mb-6">
+
+        <h2
+          className="
+            text-3xl
+            font-bold
+            text-black
+            dark:text-white
+          "
+        >
+          Markdown Preview 👀
+        </h2>
+
+        <p
+          className="
+            mt-2
+            text-gray-600
+            dark:text-gray-400
+          "
+        >
+          Live rendered markdown notes.
+        </p>
+
+      </div>
+
+      {/* MARKDOWN */}
+
+      <div
         className="
-          text-2xl
-          font-bold
-          text-white
-          mb-6
+          prose
+          prose-lg
+          dark:prose-invert
+          max-w-none
+          break-words
         "
       >
-        Markdown Preview
-      </h2>
 
-      <div className="text-gray-300 leading-relaxed">
+        <ReactMarkdown>
 
-        <h1 className="text-4xl font-bold text-white">
-          DevSphere Notes
-        </h1>
+          {
 
-        <p className="mt-4">
-          Markdown preview content appears here.
-        </p>
+            content ||
+
+            `
+# Welcome to DevSphere Notes 🚀
+
+You can write markdown here.
+
+## Features
+
+- Rich notes
+- Markdown rendering
+- AI summaries
+- Productivity workspace
+
+### Example Code
+
+\`\`\`js
+console.log("DevSphere AI");
+\`\`\`
+            `
+          }
+
+        </ReactMarkdown>
 
       </div>
 

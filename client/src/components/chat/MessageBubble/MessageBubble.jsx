@@ -1,40 +1,164 @@
+// client/src/components/chat/MessageBubble/MessageBubble.jsx
+
 function MessageBubble({
+
   message,
-  sender,
-  isOwnMessage,
+
+  isOwn,
+
 }) {
 
   return (
+
     <div
       className={`
         flex
-        ${isOwnMessage
-          ? 'justify-end'
-          : 'justify-start'}
+        ${
+
+          isOwn
+
+            ? "justify-end"
+
+            : "justify-start"
+        }
       `}
     >
 
       <div
         className={`
-          max-w-md
+          max-w-[75%]
           px-5
           py-4
-          rounded-2xl
+          rounded-3xl
+          backdrop-blur-md
+          border
+          transition
+
           ${
-            isOwnMessage
-              ? 'bg-[#b9ff66] text-black'
-              : 'bg-gray-800 text-white'
+
+            isOwn
+
+              ? `
+                bg-[#b9ff66]
+                text-black
+                border-[#b9ff66]
+                rounded-br-md
+              `
+
+              : `
+                bg-black/5
+                dark:bg-white/5
+                text-black
+                dark:text-white
+                border-black/10
+                dark:border-white/10
+                rounded-bl-md
+              `
           }
         `}
       >
 
-        <p className="font-semibold mb-2">
-          {sender}
+        {/* MESSAGE */}
+
+        <p
+          className="
+            text-sm
+            md:text-base
+            leading-relaxed
+            break-words
+          "
+        >
+          {message.message}
         </p>
 
-        <p>
-          {message}
-        </p>
+
+
+        {/* FOOTER */}
+
+        <div
+          className={`
+            flex
+            items-center
+            justify-between
+            gap-4
+            mt-3
+
+            ${
+
+              isOwn
+
+                ? "text-black/70"
+
+                : "text-gray-500"
+            }
+          `}
+        >
+
+          {/* TIME */}
+
+          <span
+            className="
+              text-xs
+            "
+          >
+
+            {
+
+              message.createdAt
+
+                ? new Date(
+
+                    message.createdAt
+                  ).toLocaleTimeString(
+
+                    [],
+
+                    {
+
+                      hour:
+                        "2-digit",
+
+                      minute:
+                        "2-digit",
+                    }
+                  )
+
+                : "Now"
+            }
+
+          </span>
+
+
+
+          {/* READ STATUS */}
+
+          {
+
+            isOwn
+
+            && (
+
+              <span
+                className="
+                  text-xs
+                  font-medium
+                "
+              >
+
+                {
+
+                  message.read
+
+                    ? "Seen"
+
+                    : "Sent"
+                }
+
+              </span>
+            )
+          }
+
+        </div>
 
       </div>
 

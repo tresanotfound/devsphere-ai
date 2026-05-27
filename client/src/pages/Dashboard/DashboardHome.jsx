@@ -1,53 +1,235 @@
 // client/src/pages/Dashboard/DashboardHome.jsx
 
-import DashboardLayout from "../../components/layout/DashboardLayout/DashboardLayout";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import axios from "axios";
+
+import DashboardLayout
+from "../../components/layout/DashboardLayout/DashboardLayout";
 
 import {
   motion,
 } from "framer-motion";
 
 import {
-  FiCpu,
-  FiActivity,
+
   FiCheckCircle,
   FiFolder,
+  FiTrendingUp,
+  FiFileText,
+
 } from "react-icons/fi";
 
-import AnalyticsChart from "../../components/dashboard/AnalyticsChart/AnalyticsChart";
+import AnalyticsChart
+from "../../components/dashboard/AnalyticsChart/AnalyticsChart";
 
-import ProductivityGraph from "../../components/dashboard/ProductivityGraph/ProductivityGraph";
+import ProductivityGraph
+from "../../components/dashboard/ProductivityGraph/ProductivityGraph";
 
-import KanbanBoard from "../../components/tasks/KanbanBoard/KanbanBoard";
+import KanbanBoard
+from "../../components/tasks/KanbanBoard/KanbanBoard";
 
 function DashboardHome() {
+
+  const [
+    analytics,
+    setAnalytics,
+  ] = useState(null);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+
+
+  /* =========================================
+     FETCH ANALYTICS
+  ========================================= */
+
+  const fetchAnalytics =
+    async () => {
+
+      try {
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        const response =
+          await axios.get(
+
+            "http://localhost:5000/api/analytics/dashboard",
+
+            {
+
+              headers: {
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+        setAnalytics(
+          response.data.analytics
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
+
+
+
+  useEffect(() => {
+
+    fetchAnalytics();
+
+  }, []);
+
+
+
+  /* =========================================
+     LOADING STATE
+  ========================================= */
+
+  if (loading) {
+
+    return (
+
+      <DashboardLayout>
+
+        <div
+          className="
+            flex
+            items-center
+            justify-center
+            h-[70vh]
+          "
+        >
+
+          <h1
+            className="
+              text-3xl
+              font-bold
+              text-black
+              dark:text-white
+            "
+          >
+            Loading Dashboard...
+          </h1>
+
+        </div>
+
+      </DashboardLayout>
+    );
+  }
+
+
+
+  /* =========================================
+     SAFETY CHECK
+  ========================================= */
+
+  if (!analytics) {
+
+    return (
+
+      <DashboardLayout>
+
+        <div
+          className="
+            flex
+            items-center
+            justify-center
+            h-[70vh]
+          "
+        >
+
+          <h1
+            className="
+              text-2xl
+              font-bold
+              text-red-500
+            "
+          >
+            Failed to load analytics
+          </h1>
+
+        </div>
+
+      </DashboardLayout>
+    );
+  }
+
+
+
+  /* =========================================
+     DASHBOARD CARDS
+  ========================================= */
 
   const cards = [
 
     {
-      title: "AI Requests",
-      value: "1,284",
-      icon: <FiCpu />,
+
+      title:
+        "Completed Tasks",
+
+      value:
+        analytics.tasks.completed,
+
+      icon:
+        <FiCheckCircle />,
     },
 
     {
-      title: "Completed Tasks",
-      value: "382",
-      icon: <FiCheckCircle />,
+
+      title:
+        "Projects",
+
+      value:
+        analytics.projects.total,
+
+      icon:
+        <FiFolder />,
     },
 
     {
-      title: "Projects",
-      value: "24",
-      icon: <FiFolder />,
+
+      title:
+        "Notes",
+
+      value:
+        analytics.notes.total,
+
+      icon:
+        <FiFileText />,
     },
 
     {
-      title: "Activity Score",
-      value: "92%",
-      icon: <FiActivity />,
-    },
 
+      title:
+        "Productivity",
+
+      value:
+        `${analytics.productivityScore}%`,
+
+      icon:
+        <FiTrendingUp />,
+    },
   ];
+
+
 
   return (
 
@@ -103,6 +285,8 @@ function DashboardHome() {
 
       </div>
 
+
+
       {/* STATS CARDS */}
 
       <div
@@ -117,105 +301,111 @@ function DashboardHome() {
 
         {
 
-          cards.map((card, index) => (
+          cards.map(
 
-            <motion.div
+            (
+              card,
+              index
+            ) => (
 
-              key={card.title}
+              <motion.div
 
-              initial={{
-                opacity: 0,
-                y: 30,
-              }}
+                key={card.title}
 
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+                initial={{
+                  opacity: 0,
+                  y: 30,
+                }}
 
-              transition={{
-                delay: index * 0.1,
-              }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
 
-              className="
-                glass-card
-                p-6
-                rounded-3xl
-                hover:scale-[1.02]
-                transition-all
-                duration-300
-                border
-                border-white/10
-              "
-            >
+                transition={{
+                  delay: index * 0.1,
+                }}
 
-              <div
                 className="
-                  flex
-                  items-center
-                  justify-between
+                  glass-card
+                  p-6
+                  rounded-3xl
+                  hover:scale-[1.02]
+                  transition-all
+                  duration-300
+                  border
+                  border-white/10
                 "
               >
 
-                {/* TEXT */}
-
-                <div>
-
-                  <p
-                    className="
-                      text-gray-600
-                      dark:text-gray-400
-                      text-sm
-                      md:text-base
-                    "
-                  >
-                    {card.title}
-                  </p>
-
-                  <h2
-                    className="
-                      text-4xl
-                      md:text-5xl
-                      font-extrabold
-                      mt-3
-                      text-black
-                      dark:text-white
-                    "
-                  >
-                    {card.value}
-                  </h2>
-
-                </div>
-
-                {/* ICON */}
-
                 <div
                   className="
-                    w-20
-                    h-20
-                    rounded-3xl
                     flex
                     items-center
-                    justify-center
-                    bg-gradient-to-br
-                    from-[#b9ff66]
-                    to-[#7cf29a]
-                    text-black
-                    text-4xl
-                    shadow-lg
+                    justify-between
                   "
                 >
-                  {card.icon}
+
+                  {/* TEXT */}
+
+                  <div>
+
+                    <p
+                      className="
+                        text-gray-600
+                        dark:text-gray-400
+                        text-sm
+                        md:text-base
+                      "
+                    >
+                      {card.title}
+                    </p>
+
+                    <h2
+                      className="
+                        text-4xl
+                        md:text-5xl
+                        font-extrabold
+                        mt-3
+                        text-black
+                        dark:text-white
+                      "
+                    >
+                      {card.value}
+                    </h2>
+
+                  </div>
+
+                  {/* ICON */}
+
+                  <div
+                    className="
+                      w-20
+                      h-20
+                      rounded-3xl
+                      flex
+                      items-center
+                      justify-center
+                      bg-gradient-to-br
+                      from-[#b9ff66]
+                      to-[#7cf29a]
+                      text-black
+                      text-4xl
+                      shadow-lg
+                    "
+                  >
+                    {card.icon}
+                  </div>
+
                 </div>
 
-              </div>
-
-            </motion.div>
-
-          ))
+              </motion.div>
+            ))
         }
 
       </div>
+
+
 
       {/* CHARTS */}
 
@@ -229,7 +419,7 @@ function DashboardHome() {
         "
       >
 
-        {/* AI ANALYTICS */}
+        {/* ANALYTICS */}
 
         <div
           className="
@@ -250,10 +440,12 @@ function DashboardHome() {
               dark:text-white
             "
           >
-            AI Analytics
+            Workspace Analytics
           </h2>
 
-          <AnalyticsChart />
+          <AnalyticsChart
+            analytics={analytics}
+          />
 
         </div>
 
@@ -278,14 +470,18 @@ function DashboardHome() {
               dark:text-white
             "
           >
-            Productivity
+            Productivity Insights
           </h2>
 
-          <ProductivityGraph />
+          <ProductivityGraph
+            analytics={analytics}
+          />
 
         </div>
 
       </div>
+
+
 
       {/* KANBAN */}
 

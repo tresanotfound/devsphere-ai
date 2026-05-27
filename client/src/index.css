@@ -2,19 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* GOOGLE FONT */
+/* ========================================
+   GOOGLE FONT
+======================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* RESET */
+/* ========================================
+   RESET
+======================================== */
 
 * {
+
   margin: 0;
+
   padding: 0;
+
   box-sizing: border-box;
 }
 
-/* ROOT */
+/* ========================================
+   ROOT VARIABLES
+======================================== */
 
 :root {
 
@@ -27,7 +36,43 @@
   --border: rgba(255,255,255,0.08);
 }
 
-/* BODY */
+/* ========================================
+   DARK THEME
+======================================== */
+
+.dark {
+
+  --bg-primary: #020817;
+
+  --bg-secondary: rgba(17,24,39,0.65);
+
+  --text-primary: white;
+
+  --text-secondary: #9ca3af;
+
+  --border-color: rgba(255,255,255,0.08);
+}
+
+/* ========================================
+   LIGHT THEME
+======================================== */
+
+.light {
+
+  --bg-primary: #f3f4f6;
+
+  --bg-secondary: rgba(255,255,255,0.75);
+
+  --text-primary: #111827;
+
+  --text-secondary: #4b5563;
+
+  --border-color: rgba(0,0,0,0.08);
+}
+
+/* ========================================
+   BODY
+======================================== */
 
 body {
 
@@ -44,23 +89,42 @@ body {
       rgba(59,130,246,0.08),
       transparent 30%
     ),
-    #071028;
+    var(--bg-primary);
 
-  color: white;
+  color: var(--text-primary);
 
   overflow-x: hidden;
 
   min-height: 100vh;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
-/* SCROLLBAR */
+/* ========================================
+   LINKS
+======================================== */
+
+a {
+
+  text-decoration: none;
+
+  color: inherit;
+}
+
+/* ========================================
+   SCROLLBAR
+======================================== */
 
 ::-webkit-scrollbar {
-  width: 8px;
+
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #081028;
+
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -74,38 +138,39 @@ body {
   border-radius: 999px;
 }
 
-/* LINKS */
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* GLASS CARD */
+/* ========================================
+   GLASS CARD
+======================================== */
 
 .glass-card {
 
-  background: rgba(17,24,39,0.55);
+  background: var(--bg-secondary);
 
-  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-color);
 
-  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+
+  border-radius: 28px;
 
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.35);
+    0 8px 32px rgba(0,0,0,0.25);
 
-  border-radius: 24px;
+  transition: all 0.3s ease;
 }
 
-/* GLOW */
+/* ========================================
+   GREEN GLOW
+======================================== */
 
 .green-glow {
 
   box-shadow:
-    0 0 30px rgba(185,255,102,0.35);
+    0 0 30px rgba(185,255,102,0.25);
 }
 
-/* HOVER */
+/* ========================================
+   HOVER LIFT
+======================================== */
 
 .hover-lift {
 
@@ -122,7 +187,9 @@ a {
     0 20px 40px rgba(0,0,0,0.35);
 }
 
-/* BUTTON */
+/* ========================================
+   PRIMARY BUTTON
+======================================== */
 
 .primary-btn {
 
@@ -143,152 +210,129 @@ a {
 
 .primary-btn:hover {
 
-  transform: scale(1.04);
+  transform: scale(1.03);
 
   box-shadow:
     0 10px 30px rgba(185,255,102,0.35);
 }
 
-/* DARK THEME */
+/* ========================================
+   GLASS INPUT SYSTEM
+======================================== */
 
-.dark {
+.glass-input {
 
-  --bg-primary: #071028;
+  width: 100%;
 
-  --bg-secondary: rgba(17,24,39,0.7);
+  padding: 16px 18px;
 
-  --text-primary: white;
-
-  --text-secondary: #9ca3af;
-
-  --border-color: rgba(255,255,255,0.08);
-}
-
-/* LIGHT THEME */
-
-.light {
-
-  --bg-primary: #f3f4f6;
-
-  --bg-secondary: rgba(255,255,255,0.7);
-
-  --text-primary: #111827;
-
-  --text-secondary: #4b5563;
-
-  --border-color: rgba(0,0,0,0.08);
-}
-
-/* BODY */
-
-body {
-
-  background: var(--bg-primary);
-
-  color: var(--text-primary);
-
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
-}
-
-/* GLASS CARD */
-
-.glass-card {
-
-  background: var(--bg-secondary);
-
-  border: 1px solid var(--border-color);
-
-  backdrop-filter: blur(18px);
-
-  border-radius: 24px;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #b9ff66;
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-body {
-
-  background: #020817;
-
-  color: white;
-
-  transition: all 0.3s ease;
-}
-
-.light body {
-
-  background: #f3f4f6;
-
-  color: black;
-}
-
-/* GLASS CARD */
-
-.glass-card {
-
-  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
 
   border: 1px solid rgba(255,255,255,0.08);
 
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.05);
 
-  border-radius: 28px;
-
-  transition: all 0.3s ease;
-}
-
-.light .glass-card {
-
-  background: rgba(255,255,255,0.75);
-
-  border: 1px solid rgba(0,0,0,0.08);
-}
-
-/* INPUTS */
-
-input {
+  backdrop-filter: blur(14px);
 
   color: white;
-}
 
-.light input {
+  outline: none;
 
-  color: black;
+  transition: all 0.3s ease;
+
+  font-size: 15px;
 }
 
 /* PLACEHOLDER */
 
-input::placeholder {
+.glass-input::placeholder {
 
-  color: #9ca3af;
+  color: rgba(255,255,255,0.45);
 }
 
-/* SIDEBAR */
+/* FOCUS */
+
+.glass-input:focus {
+
+  border-color: #b9ff66;
+
+  box-shadow:
+    0 0 0 4px rgba(185,255,102,0.12);
+}
+
+/* SELECT OPTIONS */
+
+.glass-input option {
+
+  background: #071028;
+
+  color: white;
+}
+
+/* DATE ICON */
+
+.glass-input::-webkit-calendar-picker-indicator {
+
+  filter: invert(1);
+}
+
+/* TEXTAREA */
+
+textarea.glass-input {
+
+  min-height: 140px;
+
+  resize: none;
+}
+
+/* ========================================
+   LIGHT MODE INPUTS
+======================================== */
+
+.light .glass-input {
+
+  background: rgba(255,255,255,0.75);
+
+  border: 1px solid rgba(0,0,0,0.08);
+
+  color: #111827;
+}
+
+.light .glass-input::placeholder {
+
+  color: rgba(0,0,0,0.45);
+}
+
+.light .glass-input option {
+
+  background: white;
+
+  color: black;
+}
+
+.light .glass-input::-webkit-calendar-picker-indicator {
+
+  filter: invert(0);
+}
+
+/* ========================================
+   SIDEBAR
+======================================== */
 
 .light aside {
 
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.85);
 
   border-right: 1px solid rgba(0,0,0,0.08);
 }
 
-/* TOPBAR */
+/* ========================================
+   TOPBAR
+======================================== */
 
 .light header {
 
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.75);
 
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }

@@ -1,295 +1,270 @@
-import { useState } from "react";
+import {
+  useState,
+} from "react";
+
+import axios from "axios";
 
 import {
-  Link,
   useNavigate,
+  Link,
 } from "react-router-dom";
 
 import {
-  motion,
-} from "framer-motion";
-
-import {
-  FiMail,
-  FiLock,
-  FiArrowRight,
-} from "react-icons/fi";
+  useAuth,
+} from "../../context/AuthContext";
 
 function Login() {
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const [formData, setFormData] = useState({
+  const { login } =
+    useAuth();
 
-    email: "",
-    password: "",
+  const [formData,
+    setFormData] = useState({
 
-  });
+      email: "",
+      password: "",
 
+    });
+
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  const [error,
+    setError] =
+    useState("");
+
+  // CHANGE
   const handleChange = (e) => {
 
     setFormData({
 
       ...formData,
-      [e.target.name]: e.target.value,
+
+      [e.target.name]:
+        e.target.value,
 
     });
+
   };
 
-  const handleSubmit = (e) => {
+  // SUBMIT
+  const handleSubmit =
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    navigate("/dashboard");
-  };
+      try {
+
+        setLoading(true);
+
+        setError("");
+
+        const { data } =
+          await axios.post(
+
+            "http://localhost:5000/api/auth/login",
+
+            formData
+
+          );
+
+        login(
+          data.user,
+          data.token
+        );
+
+        navigate("/dashboard");
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          "Login failed"
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
 
   return (
 
     <div
       className="
         min-h-screen
-        bg-[#020817]
         flex
         items-center
         justify-center
+        bg-[#020617]
+        text-white
         px-6
-        relative
-        overflow-hidden
       "
     >
 
-      {/* BACKGROUND GLOW */}
-
-      <div
-        className="
-          absolute
-          top-[-200px]
-          left-[-200px]
-          w-[500px]
-          h-[500px]
-          bg-[#b9ff66]
-          opacity-20
-          blur-[140px]
-          rounded-full
-        "
-      />
-
-      <div
-        className="
-          absolute
-          bottom-[-200px]
-          right-[-200px]
-          w-[500px]
-          h-[500px]
-          bg-cyan-500
-          opacity-20
-          blur-[140px]
-          rounded-full
-        "
-      />
-
-      {/* CARD */}
-
-      <motion.div
-
-        initial={{
-          opacity: 0,
-          y: 40,
-        }}
-
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-
-        transition={{
-          duration: 0.6,
-        }}
+      <form
+        onSubmit={handleSubmit}
 
         className="
-          relative
-          z-10
           w-full
           max-w-md
           bg-white/5
           border
           border-white/10
-          backdrop-blur-2xl
-          rounded-[32px]
+          backdrop-blur-xl
+          rounded-3xl
           p-10
-          shadow-2xl
         "
       >
 
-        {/* LOGO */}
-
-        <div className="mb-10 text-center">
-
-          <h1
-            className="
-              text-5xl
-              font-extrabold
-              tracking-tight
-            "
-          >
-            DevSphere AI
-          </h1>
-
-          <p
-            className="
-              text-gray-400
-              mt-4
-              text-lg
-            "
-          >
-            Welcome back to your AI workspace.
-          </p>
-
-        </div>
-
-        {/* FORM */}
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6"
+        <h1
+          className="
+            text-5xl
+            font-extrabold
+            mb-3
+          "
         >
-
-          {/* EMAIL */}
-
-          <div
-            className="
-              flex
-              items-center
-              gap-4
-              bg-white/5
-              border
-              border-white/10
-              rounded-2xl
-              px-5
-              py-4
-            "
-          >
-
-            <FiMail className="text-xl text-[#b9ff66]" />
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-
-              className="
-                bg-transparent
-                outline-none
-                w-full
-                text-white
-                placeholder:text-gray-500
-              "
-            />
-
-          </div>
-
-          {/* PASSWORD */}
-
-          <div
-            className="
-              flex
-              items-center
-              gap-4
-              bg-white/5
-              border
-              border-white/10
-              rounded-2xl
-              px-5
-              py-4
-            "
-          >
-
-            <FiLock className="text-xl text-[#b9ff66]" />
-
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-
-              className="
-                bg-transparent
-                outline-none
-                w-full
-                text-white
-                placeholder:text-gray-500
-              "
-            />
-
-          </div>
-
-          {/* BUTTON */}
-
-          <button
-            type="submit"
-
-            className="
-              w-full
-              bg-gradient-to-r
-              from-[#b9ff66]
-              to-[#7cf29a]
-              text-black
-              py-4
-              rounded-2xl
-              font-bold
-              text-lg
-              flex
-              items-center
-              justify-center
-              gap-3
-              hover:scale-[1.02]
-              transition-all
-              duration-300
-            "
-          >
-
-            Login
-
-            <FiArrowRight className="text-xl" />
-
-          </button>
-
-        </form>
-
-        {/* FOOTER */}
+          Login
+        </h1>
 
         <p
           className="
-            text-center
             text-gray-400
-            mt-8
+            mb-8
+          "
+        >
+          Welcome back to DevSphere AI.
+        </p>
+
+        {/* ERROR */}
+        {error && (
+
+          <div
+            className="
+              bg-red-500/20
+              border
+              border-red-500
+              text-red-300
+              p-3
+              rounded-xl
+              mb-5
+            "
+          >
+            {error}
+          </div>
+
+        )}
+
+        {/* EMAIL */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+
+          className="
+            w-full
+            p-4
+            rounded-2xl
+            bg-white/10
+            border
+            border-white/10
+            outline-none
+            mb-5
+          "
+
+          required
+        />
+
+        {/* PASSWORD */}
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+
+          className="
+            w-full
+            p-4
+            rounded-2xl
+            bg-white/10
+            border
+            border-white/10
+            outline-none
+            mb-6
+          "
+
+          required
+        />
+
+        {/* BUTTON */}
+        <button
+          type="submit"
+
+          disabled={loading}
+
+          className="
+            w-full
+            bg-[#b9ff66]
+            text-black
+            font-bold
+            py-4
+            rounded-2xl
+            hover:scale-[1.02]
+            transition
           "
         >
 
-          Don’t have an account?{" "}
+          {
+
+            loading
+
+              ? "Logging in..."
+
+              : "Login"
+
+          }
+
+        </button>
+
+        <p
+          className="
+            text-gray-400
+            mt-6
+            text-center
+          "
+        >
+
+          Don't have an account?
 
           <Link
             to="/signup"
+
             className="
               text-[#b9ff66]
+              ml-2
               font-semibold
-              hover:underline
             "
           >
-            Sign Up
+            Signup
           </Link>
 
         </p>
 
-      </motion.div>
+      </form>
 
     </div>
+
   );
+
 }
 
 export default Login;

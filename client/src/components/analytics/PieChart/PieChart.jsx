@@ -1,72 +1,164 @@
-function PieChart() {
+// client/src/components/analytics/PieChart/PieChart.jsx
+
+import {
+
+  PieChart as RePieChart,
+
+  Pie,
+
+  Cell,
+
+  Tooltip,
+
+  ResponsiveContainer,
+
+  Legend,
+
+} from "recharts";
+
+function PieChart({
+
+  analytics,
+
+}) {
+
+  if (!analytics) return null;
+
+
+
+  /* =========================================
+     DATA
+  ========================================= */
 
   const data = [
+
     {
-      label: 'Frontend',
-      value: '40%',
+
+      name:
+        "Completed",
+
+      value:
+        analytics.tasks.completed,
     },
 
     {
-      label: 'Backend',
-      value: '35%',
-    },
 
-    {
-      label: 'AI',
-      value: '25%',
+      name:
+        "Pending",
+
+      value:
+        analytics.tasks.pending,
     },
   ];
 
+
+
+  /* =========================================
+     COLORS
+  ========================================= */
+
+  const COLORS = [
+
+    "#b9ff66",
+
+    "#facc15",
+  ];
+
+
+
   return (
+
     <div
       className="
-        bg-gray-900
-        p-6
-        rounded-2xl
-        border
-        border-gray-800
+        glass-card
+        p-7
+        rounded-3xl
+        h-[420px]
       "
     >
 
-      <h2
-        className="
-          text-2xl
-          font-bold
-          text-white
-          mb-6
-        "
-      >
-        Team Distribution
-      </h2>
+      {/* HEADER */}
 
-      <div className="space-y-4">
+      <div className="mb-6">
 
-        {data.map((item, index) => (
+        <h2
+          className="
+            text-3xl
+            font-bold
+            text-black
+            dark:text-white
+          "
+        >
+          Task Distribution
+        </h2>
 
-          <div
-            key={index}
-            className="
-              flex
-              justify-between
-              bg-gray-800
-              p-4
-              rounded-xl
-            "
-          >
-
-            <span className="text-gray-300">
-              {item.label}
-            </span>
-
-            <span className="text-[#b9ff66]">
-              {item.value}
-            </span>
-
-          </div>
-
-        ))}
+        <p
+          className="
+            mt-2
+            text-gray-600
+            dark:text-gray-400
+          "
+        >
+          Completed vs pending tasks
+        </p>
 
       </div>
+
+
+
+      {/* CHART */}
+
+      <ResponsiveContainer
+        width="100%"
+        height="80%"
+      >
+
+        <RePieChart>
+
+          <Pie
+
+            data={data}
+
+            cx="50%"
+
+            cy="50%"
+
+            outerRadius={120}
+
+            dataKey="value"
+
+            label
+          >
+
+            {
+
+              data.map(
+
+                (
+                  entry,
+                  index
+                ) => (
+
+                  <Cell
+
+                    key={`cell-${index}`}
+
+                    fill={
+                      COLORS[index]
+                    }
+                  />
+                ))
+            }
+
+          </Pie>
+
+          <Tooltip />
+
+          <Legend />
+
+        </RePieChart>
+
+      </ResponsiveContainer>
 
     </div>
   );

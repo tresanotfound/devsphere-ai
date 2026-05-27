@@ -5,85 +5,74 @@ import {
   useState,
 } from "react";
 
-import {
-  getCurrentUser,
-} from "../services/authService";
-
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({
+  children,
+}) => {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] =
+    useState(null);
 
-  const [token, setToken] = useState(
-    localStorage.getItem("token") || null
-  );
+  const [token, setToken] =
+    useState(
+      localStorage.getItem("token")
+    );
 
-  const [loading, setLoading] = useState(true);
-
-
-  // LOAD CURRENT USER
+  // AUTO LOGIN
   useEffect(() => {
 
-    const loadUser = async () => {
+    const storedUser =
+      localStorage.getItem("user");
 
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    if (storedUser) {
 
-      try {
+      setUser(
+        JSON.parse(storedUser)
+      );
 
-        const userData =
-          await getCurrentUser(token);
+    }
 
-        setUser(userData);
-
-      } catch (error) {
-
-        console.log(error);
-
-        logout();
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-    loadUser();
-
-  }, [token]);
-
+  }, []);
 
   // LOGIN
-  const login = (userData) => {
+  const login = (
+    userData,
+    jwtToken
+  ) => {
 
     localStorage.setItem(
       "token",
-      userData.token
+      jwtToken
     );
 
-    setToken(userData.token);
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+
+    setToken(jwtToken);
 
     setUser(userData);
 
   };
 
-
   // LOGOUT
   const logout = () => {
 
-    localStorage.removeItem("token");
+    localStorage.removeItem(
+      "token"
+    );
 
-    setToken(null);
+    localStorage.removeItem(
+      "user"
+    );
 
     setUser(null);
 
-  };
+    setToken(null);
 
+  };
 
   return (
 
@@ -93,7 +82,6 @@ export const AuthProvider = ({ children }) => {
         token,
         login,
         logout,
-        loading,
       }}
     >
 
@@ -104,7 +92,6 @@ export const AuthProvider = ({ children }) => {
   );
 
 };
-
 
 export const useAuth = () =>
   useContext(AuthContext);

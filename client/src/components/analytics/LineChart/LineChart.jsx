@@ -1,48 +1,169 @@
-function LineChart() {
+// client/src/components/analytics/LineChart/LineChart.jsx
 
-  const values = [20, 40, 70, 50, 90];
+import {
+
+  LineChart as ReLineChart,
+
+  Line,
+
+  XAxis,
+
+  YAxis,
+
+  Tooltip,
+
+  ResponsiveContainer,
+
+  CartesianGrid,
+
+} from "recharts";
+
+function LineChart({
+
+  analytics,
+
+}) {
+
+  if (!analytics) return null;
+
+
+
+  /* =========================================
+     MOCK PRODUCTIVITY TREND
+     (Later from DB history)
+  ========================================= */
+
+  const data = [
+
+    {
+      day: "Mon",
+      productivity: 35,
+    },
+
+    {
+      day: "Tue",
+      productivity: 48,
+    },
+
+    {
+      day: "Wed",
+      productivity: 58,
+    },
+
+    {
+      day: "Thu",
+      productivity: 65,
+    },
+
+    {
+      day: "Fri",
+      productivity:
+        analytics.productivityScore,
+    },
+
+    {
+      day: "Sat",
+      productivity: 72,
+    },
+
+    {
+      day: "Sun",
+      productivity: 80,
+    },
+  ];
+
+
 
   return (
+
     <div
       className="
-        bg-gray-900
-        p-6
-        rounded-2xl
-        border
-        border-gray-800
+        glass-card
+        p-7
+        rounded-3xl
+        h-[450px]
       "
     >
 
-      <h2
-        className="
-          text-2xl
-          font-bold
-          text-white
-          mb-6
-        "
+      {/* HEADER */}
+
+      <div className="mb-6">
+
+        <h2
+          className="
+            text-3xl
+            font-bold
+            text-black
+            dark:text-white
+          "
+        >
+          Productivity Trend 📈
+        </h2>
+
+        <p
+          className="
+            mt-2
+            text-gray-600
+            dark:text-gray-400
+          "
+        >
+          Weekly productivity growth
+          and performance analytics.
+        </p>
+
+      </div>
+
+
+
+      {/* CHART */}
+
+      <ResponsiveContainer
+        width="100%"
+        height="80%"
       >
-        Productivity Trend
-      </h2>
 
-      <div className="flex items-end gap-4 h-52">
+        <ReLineChart
+          data={data}
+        >
 
-        {values.map((value, index) => (
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="rgba(255,255,255,0.08)"
+          />
 
-          <div
-            key={index}
-            className="
-              flex-1
-              bg-[#b9ff66]
-              rounded-t-xl
-            "
-            style={{
-              height: `${value}%`,
+          <XAxis
+            dataKey="day"
+            stroke="#9ca3af"
+          />
+
+          <YAxis
+            stroke="#9ca3af"
+          />
+
+          <Tooltip />
+
+          <Line
+
+            type="monotone"
+
+            dataKey="productivity"
+
+            stroke="#b9ff66"
+
+            strokeWidth={4}
+
+            dot={{
+              r: 6,
+            }}
+
+            activeDot={{
+              r: 8,
             }}
           />
 
-        ))}
+        </ReLineChart>
 
-      </div>
+      </ResponsiveContainer>
 
     </div>
   );

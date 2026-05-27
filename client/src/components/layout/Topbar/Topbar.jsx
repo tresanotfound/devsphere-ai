@@ -16,6 +16,10 @@ import {
   useTheme,
 } from "../../../context/ThemeContext";
 
+import {
+  useAuth,
+} from "../../../context/AuthContext";
+
 import NotificationsDropdown
 from "../../dashboard/Notifications/NotificationsDropdown";
 
@@ -31,6 +35,12 @@ function Topbar({
     toggleTheme,
 
   } = useTheme();
+
+  const {
+
+    user,
+
+  } = useAuth();
 
   const [
     openNotifications,
@@ -294,7 +304,7 @@ function Topbar({
           >
 
             <img
-              src="https://i.pravatar.cc/100"
+              src={`https://ui-avatars.com/api/?name=${user?.name || "User"}&background=b9ff66&color=000`}
               alt="profile"
 
               className="
@@ -316,7 +326,7 @@ function Topbar({
                   dark:text-white
                 "
               >
-                Treesa George
+                {user?.name || "User"}
               </h3>
 
               <p
@@ -326,7 +336,7 @@ function Topbar({
                   dark:text-gray-400
                 "
               >
-                Frontend Developer
+                {user?.email || "user@email.com"}
               </p>
 
             </div>
