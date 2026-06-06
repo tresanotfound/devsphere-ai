@@ -1,18 +1,15 @@
-function AIHistory() {
+function AIHistory({
 
-  const history = [
-    'Generate React dashboard UI',
-    'Explain Redux Toolkit',
-    'Create Express API structure',
-  ];
+  history,
+
+}) {
 
   return (
+
     <div
       className="
-        bg-gray-900
-        rounded-2xl
-        border
-        border-gray-800
+        glass-card
+        rounded-3xl
         p-6
       "
     >
@@ -21,32 +18,99 @@ function AIHistory() {
         className="
           text-2xl
           font-bold
-          text-white
+          text-black
+          dark:text-white
           mb-6
         "
       >
-        AI History
+        AI History 🧠
       </h2>
 
-      <div className="space-y-4">
+      {
 
-        {history.map((item, index) => (
+        history.length === 0
+
+        ? (
 
           <div
-            key={index}
             className="
-              bg-gray-800
-              rounded-xl
-              p-4
-              text-gray-300
+              text-center
+              py-10
             "
           >
-            {item}
+
+            <p
+              className="
+                text-gray-500
+              "
+            >
+              No AI activity yet.
+            </p>
+
           </div>
+        )
 
-        ))}
+        : (
 
-      </div>
+          <div className="space-y-4">
+
+            {
+
+              history.map(
+
+                (item, index) => (
+
+                  <div
+
+                    key={index}
+
+                    className="
+                      p-4
+                      rounded-2xl
+                      bg-black/5
+                      dark:bg-white/5
+                      border
+                      border-black/10
+                      dark:border-white/10
+                    "
+                  >
+
+                    <h3
+                      className="
+                        font-semibold
+                        text-black
+                        dark:text-white
+                        line-clamp-2
+                      "
+                    >
+                      {item.prompt}
+                    </h3>
+
+                    <p
+                      className="
+                        text-xs
+                        mt-2
+                        text-gray-500
+                      "
+                    >
+
+                      {
+
+                        new Date(
+
+                          item.createdAt
+                        ).toLocaleString()
+                      }
+
+                    </p>
+
+                  </div>
+                ))
+            }
+
+          </div>
+        )
+      }
 
     </div>
   );

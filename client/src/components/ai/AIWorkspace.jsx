@@ -1,179 +1,146 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import DashboardLayout from "../layout/DashboardLayout/DashboardLayout";
 
-import {
-  FiSend,
-  FiCpu,
-} from "react-icons/fi";
+import AIPromptInput from "./AIPromptInput/AIPromptInput";
+import AIResponse from "./AIResponse/AIResponse";
+import AISuggestions from "./AISuggestions/AISuggestions";
+import AIHistory from "./AIHistory/AIHistory";
+import CodeGenerator from "./CodeGenerator/CodeGenerator";
 
 function AIWorkspace() {
 
   const [prompt, setPrompt] = useState("");
-
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      text:
-        "Hello 👋 I'm DevSphere AI assistant. How can I help you today?",
-    },
-  ]);
-
-  const handleSend = () => {
-
-    if (!prompt.trim()) return;
-
-    const userMessage = {
-      role: "user",
-      text: prompt,
-    };
-
-    const aiMessage = {
-      role: "assistant",
-      text:
-        "This is a demo AI response for: " + prompt,
-    };
-
-    setMessages((prev) => [
-      ...prev,
-      userMessage,
-      aiMessage,
-    ]);
-
-    setPrompt("");
-  };
+  const [response, setResponse] = useState("");
+  const [history, setHistory] = useState([]);
 
   return (
-
     <DashboardLayout>
 
-      <div className="p-8 h-[calc(100vh-100px)] flex flex-col">
+      <div className="space-y-8">
 
         {/* HEADER */}
 
-        <div className="mb-8">
-
-          <h1 className="text-6xl font-extrabold flex items-center gap-4">
-
-            AI Workspace
-
-            <FiCpu className="text-[#b9ff66]" />
-
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: -20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          className="
+            glass-card
+            rounded-3xl
+            p-8
+          "
+        >
+          <h1
+            className="
+              text-5xl
+              font-extrabold
+              text-black
+              dark:text-white
+            "
+          >
+            AI Workspace 🤖
           </h1>
 
-          <p className="text-gray-400 mt-4 text-lg">
-            Interact with your AI productivity assistant.
-          </p>
-
-        </div>
-
-        {/* CHAT AREA */}
-
-        <div
-          className="
-            flex-1
-            overflow-y-auto
-            glass-card
-            rounded-3xl
-            p-6
-            space-y-5
-            mb-6
-          "
-        >
-
-          {messages.map((msg, index) => (
-
-            <div
-              key={index}
-              className={`flex ${
-                msg.role === "user"
-                  ? "justify-end"
-                  : "justify-start"
-              }`}
-            >
-
-              <div
-                className={`
-                  max-w-[75%]
-                  px-5
-                  py-4
-                  rounded-2xl
-                  text-sm
-                  leading-relaxed
-                  ${
-                    msg.role === "user"
-                      ? "bg-[#b9ff66] text-black"
-                      : "bg-white/10 text-white"
-                  }
-                `}
-              >
-                {msg.text}
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-        {/* INPUT */}
-
-        <div
-          className="
-            flex
-            items-center
-            gap-4
-            glass-card
-            p-4
-            rounded-3xl
-          "
-        >
-
-          <input
-            type="text"
-            placeholder="Ask DevSphere AI anything..."
-
-            value={prompt}
-
-            onChange={(e) =>
-              setPrompt(e.target.value)
-            }
-
-            onKeyDown={(e) => {
-
-              if (e.key === "Enter") {
-
-                handleSend();
-              }
-            }}
-
+          <p
             className="
-              flex-1
-              bg-transparent
-              outline-none
-              text-white
-              placeholder:text-gray-500
+              mt-4
               text-lg
+              text-gray-600
+              dark:text-gray-400
             "
-          />
+          >
+            Your intelligent productivity assistant.
+          </p>
+        </motion.div>
 
-          <button
+        {/* MAIN GRID */}
 
-            onClick={handleSend}
+        <div
+          className="
+            grid
+            grid-cols-1
+            xl:grid-cols-4
+            gap-8
+          "
+        >
 
+          {/* LEFT PANEL */}
+
+          <div
             className="
-              bg-[#b9ff66]
-              text-black
-              p-4
-              rounded-2xl
-              hover:scale-105
-              transition
+              xl:col-span-3
+              space-y-8
             "
           >
 
-            <FiSend className="text-xl" />
+            {/* AI TASK GENERATOR */}
 
-          </button>
+            <AIPromptInput
+              prompt={prompt}
+              setPrompt={setPrompt}
+              setResponse={setResponse}
+              history={history}
+              setHistory={setHistory}
+            />
+
+            {/* AI TASK RESPONSE */}
+
+            <AIResponse
+              response={response}
+            />
+
+            {/* AI CODE GENERATOR */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              className="
+                glass-card
+                rounded-3xl
+                p-8
+              "
+            >
+              <h2
+                className="
+                  text-3xl
+                  font-bold
+                  mb-6
+                  text-black
+                  dark:text-white
+                "
+              >
+                💻 AI Code Generator
+              </h2>
+
+              <CodeGenerator />
+            </motion.div>
+
+          </div>
+
+          {/* RIGHT PANEL */}
+
+          <div className="space-y-8">
+
+            <AISuggestions />
+
+            <AIHistory
+              history={history}
+            />
+
+          </div>
 
         </div>
 

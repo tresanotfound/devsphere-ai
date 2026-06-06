@@ -1,51 +1,330 @@
-// ======================================
-// AI ASSISTANT CONTROLLER
-// ======================================
+import {
+  generateInsightsAI,
+} from "../services/aiService.js";
 
-export const askAI = async (
-  req,
-  res
-) => {
+import {
+  summarizeNote,
+} from "../services/noteSummarizerService.js";
 
-  try {
+import {
+  generateCode,
+} from "../services/codeGeneratorService.js";
 
-    const { prompt } = req.body;
+import {
+  generateWorkflow,
+} from "../services/taskGeneratorService.js";
 
-    if (!prompt) {
+import {
+  generateAIResponse,
+} from "../services/ai/aiGatewayService.js";
 
-      return res.status(400).json({
+/* =========================================
+   AI TASK / BLUEPRINT GENERATOR
+========================================= */
+
+export const generateAITasks =
+  async (req, res) => {
+
+    try {
+
+      const {
+        prompt,
+      } = req.body;
+
+      if (!prompt) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Prompt is required",
+        });
+      }
+
+      /* =========================================
+         ENHANCED AI PROMPT
+      ========================================= */
+
+      const enhancedPrompt = `
+You are DevSphere AI.
+
+Generate a COMPLETE project blueprint for:
+
+"${prompt}"
+
+Include:
+
+# Project Overview
+
+# Problem Statement
+
+# Target Users
+
+# Core Features
+
+# Advanced Features
+
+# Recommended Tech Stack
+
+# Frontend Architecture
+
+# Backend Architecture
+
+# Database Design
+
+# API Endpoints
+
+# Folder Structure
+
+# Development Roadmap
+
+# Milestones
+
+# Estimated Timeline
+
+# Team Requirements
+
+# Monetization Strategy
+
+# Deployment Strategy
+
+# Scalability Considerations
+
+# Security Considerations
+
+# Future Enhancements
+
+If applicable provide:
+- Sample Code
+- Database Schemas
+- API Examples
+- Folder Structures
+
+Respond in beautiful markdown.
+`;
+
+      /* =========================================
+         AI GATEWAY
+      ========================================= */
+
+      const response =
+        await generateAIResponse(
+          enhancedPrompt
+        );
+
+      return res.status(200).json({
+
+        success: true,
+
+        response,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "AI TASK ERROR:",
+        error
+      );
+
+      return res.status(500).json({
 
         success: false,
 
         message:
-          "Prompt is required",
-
+          error.message,
       });
     }
+  };
 
-    // TEMP AI RESPONSE
+/* =========================================
+   AI NOTE SUMMARY
+========================================= */
 
-    const aiResponse = `
-      DevSphere AI received:
-      ${prompt}
-    `;
+export const summarizeNotes =
+  async (req, res) => {
 
-    res.status(200).json({
+    try {
 
-      success: true,
+      const {
+        notes,
+      } = req.body;
 
-      response: aiResponse,
+      if (!notes) {
 
-    });
+        return res.status(400).json({
 
-  } catch (error) {
+          success: false,
 
-    res.status(500).json({
+          message:
+            "Notes are required",
+        });
+      }
 
-      success: false,
+      const summary =
+        summarizeNote(
+          notes
+        );
 
-      message: error.message,
+      return res.status(200).json({
 
-    });
-  }
-};
+        success: true,
+
+        summary,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "SUMMARY ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/* =========================================
+   PRODUCTIVITY INSIGHTS
+========================================= */
+
+export const generateInsights =
+  async (req, res) => {
+
+    try {
+
+      const {
+        analyticsData,
+      } = req.body;
+
+      if (!analyticsData) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Analytics data required",
+        });
+      }
+
+      const insights =
+        await generateInsightsAI(
+          analyticsData
+        );
+
+      return res.status(200).json({
+
+        success: true,
+
+        insights,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "INSIGHTS ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/* =========================================
+   AI CODE GENERATOR
+========================================= */
+
+export const generateCodeAI =
+  async (req, res) => {
+
+    try {
+
+      const {
+        prompt,
+      } = req.body;
+
+      if (!prompt) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Prompt required",
+        });
+      }
+
+      /* =========================================
+         LOCAL TEMPLATE GENERATOR
+      ========================================= */
+
+      let code =
+        generateCode(
+          prompt
+        );
+
+      /* =========================================
+         FALLBACK TO REAL AI
+      ========================================= */
+
+      if (
+        code.includes(
+          "No matching template found"
+        )
+      ) {
+
+        const aiPrompt = `
+Generate production-ready code for:
+
+${prompt}
+
+Requirements:
+- Modern coding standards
+- Clean architecture
+- Proper comments
+- Scalable structure
+- Best practices
+`;
+
+        code =
+          await generateAIResponse(
+            aiPrompt
+          );
+      }
+
+      return res.status(200).json({
+
+        success: true,
+
+        code,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "CODE GENERATOR ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
