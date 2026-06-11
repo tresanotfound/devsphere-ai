@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5000/api/auth/register
+  url: `${import.meta.env.VITE_API_URL}/api/auth/register`
   body:
     type: json
     data: |-

@@ -1,5 +1,5 @@
 REGISTER
-POST http://localhost:5000/api/auth/register
+POST ${import.meta.env.VITE_API_URL}/api/auth/register
 
 {
   "name": "Treesa",
