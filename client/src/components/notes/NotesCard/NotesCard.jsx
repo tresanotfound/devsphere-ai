@@ -32,7 +32,7 @@ function NotesCard({
         const response =
           await axios.patch(
 
-            `http://localhost:5000/api/notes/${note._id}/pin`,
+            `${import.meta.env.VITE_API_URL}/api/notes/${note._id}/pin`,
 
             {},
 

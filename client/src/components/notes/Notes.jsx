@@ -59,7 +59,7 @@ function Notes() {
       const response =
         await axios.get(
 
-          "http://localhost:5000/api/notes",
+          `${import.meta.env.VITE_API_URL}/api/notes`,
 
           {
             headers: {
@@ -141,7 +141,7 @@ function Notes() {
 
         await axios.delete(
 
-          `http://localhost:5000/api/notes/${noteId}`,
+          `${import.meta.env.VITE_API_URL}/api/notes/${noteId}`,
 
           {
             headers: {

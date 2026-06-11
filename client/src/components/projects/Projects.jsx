@@ -50,7 +50,7 @@ function Projects() {
         const response =
           await axios.get(
 
-            "http://localhost:5000/api/projects",
+            `${import.meta.env.VITE_API_URL}/api/projects`,
 
             {
               headers: {
@@ -111,7 +111,7 @@ function Projects() {
 
         await axios.delete(
 
-          `http://localhost:5000/api/projects/${projectId}`,
+          `${import.meta.env.VITE_API_URL}/api/projects/${projectId}`,
 
           {
             headers: {

@@ -54,7 +54,7 @@ function Tasks() {
       const response =
         await axios.get(
 
-          "http://localhost:5000/api/tasks",
+          `${import.meta.env.VITE_API_URL}/api/tasks`,
 
           {
             headers: {
@@ -113,7 +113,7 @@ function Tasks() {
 
         await axios.delete(
 
-          `http://localhost:5000/api/tasks/${taskId}`,
+          '${import.meta.env.VITE_API_URL}/api/tasks/${taskId}`,
 
           {
             headers: {

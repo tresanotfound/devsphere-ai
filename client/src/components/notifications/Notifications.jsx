@@ -62,7 +62,7 @@ function Notifications() {
         const response =
           await axios.get(
 
-            "http://localhost:5000/api/notifications",
+            `${import.meta.env.VITE_API_URL}/api/notifications`,
 
             {
 
@@ -174,7 +174,7 @@ function Notifications() {
 
         await axios.put(
 
-          `http://localhost:5000/api/notifications/read/${notificationId}`,
+          `${import.meta.env.VITE_API_URL}/api/notifications/read/${notificationId}`,
 
           {},
 
@@ -245,7 +245,7 @@ function Notifications() {
 
         await axios.delete(
 
-          `http://localhost:5000/api/notifications/${notificationId}`,
+          `${import.meta.env.VITE_API_URL}/api/notifications/${notificationId}`,
 
           {
 

@@ -29,7 +29,7 @@ function AIHistory({
           const res =
             await axios.get(
 
-              "http://localhost:5000/api/ai/history",
+              `${import.meta.env.VITE_API_URL}/api/ai/history`,
 
               {
                 headers: {

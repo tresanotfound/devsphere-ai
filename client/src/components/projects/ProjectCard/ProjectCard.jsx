@@ -87,7 +87,7 @@ function ProjectCard({
 
         await axios.put(
 
-          `http://localhost:5000/api/projects/${project._id}/progress`,
+          `${import.meta.env.VITE_API_URL}/api/projects/${project._id}/progress`,
 
           {
             progress: value,

@@ -80,7 +80,7 @@ function Chat() {
         const response =
           await axios.get(
 
-            "http://localhost:5000/api/chat/conversations",
+            `${import.meta.env.VITE_API_URL}/api/chat/conversations`,
 
             {
 
@@ -127,7 +127,7 @@ function Chat() {
         const response =
           await axios.get(
 
-            `http://localhost:5000/api/chat/messages/${userId}`,
+            `${import.meta.env.VITE_API_URL}/api/chat/messages/${userId}`,
 
             {
 

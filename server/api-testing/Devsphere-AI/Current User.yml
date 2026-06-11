@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:5000/api/auth/me
+  url: ${import.meta.env.VITE_API_URL}/api/auth/me
   headers:
     - name: Authorization
       value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTQ3YjRhZTJlNjVmMzBjY2I4Yjg2MyIsImlhdCI6MTc3OTczMjY1MSwiZXhwIjoxNzgyMzI0NjUxfQ.LuR4JIbvNZKtwR-knDEtYFJoypjuufki4TYAJhM13Vc
