@@ -2,8 +2,6 @@
 
 import Project from "../models/Project.js";
 
-
-
 /* =========================================
    CREATE PROJECT
 ========================================= */
@@ -23,6 +21,7 @@ export const createProject = async (
       description,
       status,
       priority,
+      assignedDate,
       deadline,
       tags,
 
@@ -35,6 +34,7 @@ export const createProject = async (
         description,
         status,
         priority,
+        assignedDate,
         deadline,
         tags,
 
@@ -179,7 +179,9 @@ export const updateProject = async (
       });
     }
 
-    // ONLY OWNER CAN UPDATE
+    /* =========================================
+       OWNER CHECK
+    ========================================= */
 
     if (
 
@@ -255,6 +257,104 @@ export const updateProject = async (
 
 
 /* =========================================
+   UPDATE PROJECT PROGRESS
+========================================= */
+
+export const updateProjectProgress = async (
+
+  req,
+  res
+
+) => {
+
+  try {
+
+    const {
+
+      progress,
+
+    } = req.body;
+
+    const project =
+      await Project.findById(
+
+        req.params.id
+      );
+
+    if (!project) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message:
+          "Project not found",
+      });
+    }
+
+    /* =========================================
+       OWNER CHECK
+    ========================================= */
+
+    if (
+
+      project.owner.toString()
+
+      !==
+
+      req.user._id.toString()
+
+    ) {
+
+      return res.status(401).json({
+
+        success: false,
+
+        message:
+          "Unauthorized",
+      });
+    }
+
+    /* =========================================
+       UPDATE PROGRESS
+    ========================================= */
+
+    project.progress =
+      progress;
+
+    project.activityLogs.push({
+
+      action:
+        `Progress updated to ${progress}%`,
+    });
+
+    await project.save();
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        "📈 Progress updated",
+
+      project,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      success: false,
+
+      message:
+        error.message,
+    });
+  }
+};
+
+
+
+/* =========================================
    DELETE PROJECT
 ========================================= */
 
@@ -284,7 +384,9 @@ export const deleteProject = async (
       });
     }
 
-    // ONLY OWNER CAN DELETE
+    /* =========================================
+       OWNER CHECK
+    ========================================= */
 
     if (
 
@@ -367,7 +469,9 @@ export const addMember = async (
       });
     }
 
-    // OWNER CHECK
+    /* =========================================
+       OWNER CHECK
+    ========================================= */
 
     if (
 
@@ -388,7 +492,9 @@ export const addMember = async (
       });
     }
 
-    // PREVENT DUPLICATES
+    /* =========================================
+       PREVENT DUPLICATES
+    ========================================= */
 
     if (
 

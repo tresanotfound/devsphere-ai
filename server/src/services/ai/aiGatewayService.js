@@ -6,8 +6,15 @@ import {
   askOpenRouterAI,
 } from "./openRouterService.js";
 
+/* =========================================
+   STREAMING AI GATEWAY
+========================================= */
+
 export const generateAIResponse =
-  async (prompt) => {
+  async (
+    prompt,
+    onChunk
+  ) => {
 
     try {
 
@@ -15,9 +22,13 @@ export const generateAIResponse =
         "Using GROQ AI..."
       );
 
-      // PRIMARY AI
+      /* =========================================
+         PRIMARY AI
+      ========================================= */
+
       return await askGroqAI(
-        prompt
+        prompt,
+        onChunk
       );
 
     } catch (error) {
@@ -28,9 +39,13 @@ export const generateAIResponse =
 
       try {
 
-        // FALLBACK AI
+        /* =========================================
+           FALLBACK AI
+        ========================================= */
+
         return await askOpenRouterAI(
-          prompt
+          prompt,
+          onChunk
         );
 
       } catch (fallbackError) {
@@ -40,17 +55,28 @@ export const generateAIResponse =
           fallbackError.message
         );
 
-        return `
+        const errorMessage = `
 # ❌ AI Service Error
 
 Both AI providers failed.
 
 ## Groq Error
+
 ${error.message}
 
 ## OpenRouter Error
+
 ${fallbackError.message}
 `;
+
+        if (onChunk) {
+
+          onChunk(
+            errorMessage
+          );
+        }
+
+        return errorMessage;
       }
     }
   };

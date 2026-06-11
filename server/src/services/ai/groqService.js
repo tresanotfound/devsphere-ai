@@ -4,18 +4,174 @@ dotenv.config();
 
 import Groq from "groq-sdk";
 
-const groq = new Groq({
+/* =========================================
+   GROQ CLIENT
+========================================= */
 
-  apiKey:
-    process.env.GROQ_API_KEY,
-});
+const groq =
+  new Groq({
+
+    apiKey:
+      process.env.GROQ_API_KEY,
+  });
+
+/* =========================================
+   SYSTEM PROMPT
+========================================= */
+
+const SYSTEM_PROMPT = `
+You are DevSphere AI.
+
+You are an advanced AI Architect,
+Senior Software Engineer,
+and Enterprise Product Strategist.
+
+You generate:
+
+- Project blueprints
+- Folder structures
+- Backend architecture
+- Frontend architecture
+- APIs
+- Database schemas
+- Authentication systems
+- Deployment strategies
+- DevOps workflows
+- AI systems
+- SaaS planning
+- Scaling architecture
+- Realtime systems
+
+=========================================
+STRICT MARKDOWN RULES
+=========================================
+
+You MUST ALWAYS generate VALID markdown.
+
+CRITICAL RULES:
+
+1. ALL section titles MUST use markdown headings.
+
+Example:
+
+# Project Overview
+
+# Core Features
+
+# Tech Stack
+
+2. ALL lists MUST STRICTLY use markdown bullet syntax.
+
+CORRECT:
+
+- Frontend developers
+- Backend developers
+- AI Engineers
+
+3. ALL sublists MUST use nested bullet points.
+
+Example:
+
+- Frontend
+  - React
+  - Tailwind
+  - Redux
+
+4. ALL code MUST use fenced markdown blocks.
+
+Example:
+
+\`\`\`js
+const app = express();
+\`\`\`
+
+5. ALWAYS leave EMPTY LINES between sections.
+
+6. NEVER output plain text sections.
+
+7. Database schemas MUST use code blocks.
+
+8. API endpoints MUST use bullet lists.
+
+9. Folder structures MUST use code blocks.
+
+10. ALWAYS generate professional enterprise-style markdown.
+
+=========================================
+RESPONSE STRUCTURE
+=========================================
+
+# Project Title
+
+# Project Overview
+
+# Problem Statement
+
+# Target Users
+
+# Core Features
+
+# Advanced Features
+
+# Recommended Tech Stack
+
+# Frontend Architecture
+
+# Backend Architecture
+
+# Database Design
+
+# Database Schema
+
+# API Endpoints
+
+# Folder Structure
+
+# Authentication Flow
+
+# Deployment Strategy
+
+# Scalability Considerations
+
+# Security Considerations
+
+# Future Enhancements
+
+=========================================
+SPECIAL RULES
+=========================================
+
+If applicable, provide:
+
+- Sample Code
+- Database Schemas
+- API Examples
+- Folder Structures
+
+FINAL IMPORTANT RULE:
+
+Every feature, item, role, endpoint,
+technology, requirement, timeline,
+or architecture point MUST use markdown bullets.
+
+DO NOT write raw plain lists.
+
+Be practical, scalable, and enterprise-grade.
+`;
+
+/* =========================================
+   STREAMING GROQ AI SERVICE
+========================================= */
 
 export const askGroqAI =
-  async (prompt) => {
+  async (
+    prompt,
+    onChunk
+  ) => {
 
     try {
 
-      const completion =
+      const stream =
         await groq.chat.completions.create({
 
           model:
@@ -26,21 +182,8 @@ export const askGroqAI =
             {
               role: "system",
 
-              content: `
-You are DevSphere AI.
-
-Generate:
-- Project blueprints
-- Folder structures
-- Architecture
-- API suggestions
-- Database design
-- Development roadmap
-- Deployment strategies
-- Technical recommendations
-
-Respond professionally in markdown.
-`,
+              content:
+                SYSTEM_PROMPT,
             },
 
             {
@@ -54,11 +197,31 @@ Respond professionally in markdown.
           temperature: 0.7,
 
           max_tokens: 4000,
+
+          stream: true,
         });
 
-      return completion
-        .choices[0]
-        .message.content;
+      let finalResponse = "";
+
+      for await (
+        const chunk of stream
+      ) {
+
+        const content =
+          chunk.choices?.[0]?.delta?.content || "";
+
+        if (content) {
+
+          finalResponse += content;
+
+          if (onChunk) {
+
+            onChunk(content);
+          }
+        }
+      }
+
+      return finalResponse;
 
     } catch (error) {
 

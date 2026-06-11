@@ -1,24 +1,49 @@
 import express from "express";
 
 import {
+
   generateAITasks,
+
   summarizeNotes,
+
   generateInsights,
+
   generateCodeAI,
+
+  getAIHistory,
+
 } from "../controllers/aiController.js";
 
-import authMiddleware from "../middleware/authMiddleware.js";
+import authMiddleware
+from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 /* =========================================
    AI TASK GENERATOR
 ========================================= */
 
 router.post(
+
   "/generate-tasks",
+
   authMiddleware,
+
   generateAITasks
+);
+
+/* =========================================
+   GET AI HISTORY
+========================================= */
+
+router.get(
+
+  "/history",
+
+  authMiddleware,
+
+  getAIHistory
 );
 
 /* =========================================
@@ -26,8 +51,11 @@ router.post(
 ========================================= */
 
 router.post(
+
   "/summarize-notes",
+
   authMiddleware,
+
   summarizeNotes
 );
 
@@ -36,8 +64,11 @@ router.post(
 ========================================= */
 
 router.post(
+
   "/generate-insights",
+
   authMiddleware,
+
   generateInsights
 );
 
@@ -46,8 +77,11 @@ router.post(
 ========================================= */
 
 router.post(
+
   "/generate-code",
+
   authMiddleware,
+
   generateCodeAI
 );
 

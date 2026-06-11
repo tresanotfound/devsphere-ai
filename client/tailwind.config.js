@@ -4,10 +4,12 @@ export default {
 
   content: [
 
-    './index.html',
+    "./index.html",
 
-    './src/**/*.{js,ts,jsx,tsx}',
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
+
+  darkMode: "class",
 
   theme: {
 
@@ -15,12 +17,15 @@ export default {
 
       colors: {
 
-        primary: '#b9ff66',
+        primary: "#b9ff66",
 
-        dark: '#0f172a',
+        dark: "#0f172a",
       },
     },
   },
 
-  plugins: [],
+  plugins: [
+
+    require("@tailwindcss/typography"),
+  ],
 };

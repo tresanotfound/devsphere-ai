@@ -1,10 +1,16 @@
 // client/src/components/projects/ProjectCard/ProjectCard.jsx
 
+import { useState } from "react";
+
+import axios from "axios";
+
 import {
+
   FiTrash2,
   FiUsers,
   FiCalendar,
   FiActivity,
+
 } from "react-icons/fi";
 
 function ProjectCard({
@@ -14,7 +20,18 @@ function ProjectCard({
 
 }) {
 
-  // STATUS COLORS
+  const [progress, setProgress] =
+    useState(
+
+      project.progress || 0
+    );
+
+  const [updating, setUpdating] =
+    useState(false);
+
+  /* =========================================
+     STATUS COLORS
+  ========================================= */
 
   const statusColors = {
 
@@ -31,7 +48,9 @@ function ProjectCard({
       "bg-yellow-500/10 text-yellow-500",
   };
 
-  // PRIORITY COLORS
+  /* =========================================
+     PRIORITY COLORS
+  ========================================= */
 
   const priorityColors = {
 
@@ -48,6 +67,54 @@ function ProjectCard({
       "bg-red-500/10 text-red-500",
   };
 
+  /* =========================================
+     UPDATE PROGRESS
+  ========================================= */
+
+  const updateProgress =
+    async (value) => {
+
+      try {
+
+        setProgress(value);
+
+        setUpdating(true);
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        await axios.put(
+
+          `http://localhost:5000/api/projects/${project._id}/progress`,
+
+          {
+            progress: value,
+          },
+
+          {
+            headers: {
+
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Progress update error:",
+          error
+        );
+
+      } finally {
+
+        setUpdating(false);
+      }
+    };
+
   return (
 
     <div
@@ -62,7 +129,9 @@ function ProjectCard({
       "
     >
 
-      {/* TOP */}
+      {/* =========================================
+         TOP
+      ========================================= */}
 
       <div
         className="
@@ -128,7 +197,9 @@ function ProjectCard({
 
       </div>
 
-      {/* BADGES */}
+      {/* =========================================
+         BADGES
+      ========================================= */}
 
       <div
         className="
@@ -177,7 +248,9 @@ function ProjectCard({
 
       </div>
 
-      {/* TAGS */}
+      {/* =========================================
+         TAGS
+      ========================================= */}
 
       <div
         className="
@@ -216,7 +289,9 @@ function ProjectCard({
 
       </div>
 
-      {/* PROGRESS */}
+      {/* =========================================
+         PROGRESS
+      ========================================= */}
 
       <div className="mt-8">
 
@@ -225,7 +300,7 @@ function ProjectCard({
             flex
             items-center
             justify-between
-            mb-2
+            mb-3
           "
         >
 
@@ -249,17 +324,18 @@ function ProjectCard({
           <span
             className="
               text-sm
-              font-semibold
-              text-black
-              dark:text-white
+              font-bold
+              text-[#b9ff66]
             "
           >
-            {project.progress}%
+            {progress}%
           </span>
 
         </div>
 
-        {/* BAR */}
+        {/* =========================================
+           PROGRESS BAR
+        ========================================= */}
 
         <div
           className="
@@ -269,6 +345,7 @@ function ProjectCard({
             bg-black/10
             dark:bg-white/10
             overflow-hidden
+            mb-4
           "
         >
 
@@ -276,21 +353,72 @@ function ProjectCard({
 
             style={{
               width:
-                `${project.progress}%`,
+                `${progress}%`,
             }}
 
             className="
               h-full
               bg-[#b9ff66]
               rounded-full
+              transition-all
+              duration-500
             "
           />
 
         </div>
 
+        {/* =========================================
+           RANGE SLIDER
+        ========================================= */}
+
+        <input
+
+          type="range"
+
+          min="0"
+
+          max="100"
+
+          value={progress}
+
+          onChange={(e) =>
+            updateProgress(
+              Number(
+                e.target.value
+              )
+            )
+          }
+
+          className="
+            w-full
+            accent-[#b9ff66]
+            cursor-pointer
+          "
+        />
+
+        {/* STATUS */}
+
+        {
+
+          updating && (
+
+            <p
+              className="
+                mt-2
+                text-xs
+                text-[#b9ff66]
+              "
+            >
+              Updating progress...
+            </p>
+          )
+        }
+
       </div>
 
-      {/* FOOTER */}
+      {/* =========================================
+         FOOTER
+      ========================================= */}
 
       <div
         className="

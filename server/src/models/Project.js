@@ -3,9 +3,14 @@
 import mongoose from "mongoose";
 
 const projectSchema =
+
   new mongoose.Schema(
 
     {
+
+      /* =========================================
+         PROJECT NAME
+      ========================================= */
 
       name: {
 
@@ -16,12 +21,20 @@ const projectSchema =
         trim: true,
       },
 
+      /* =========================================
+         DESCRIPTION
+      ========================================= */
+
       description: {
 
         type: String,
 
         default: "",
       },
+
+      /* =========================================
+         PROJECT OWNER
+      ========================================= */
 
       owner: {
 
@@ -33,6 +46,10 @@ const projectSchema =
         required: true,
       },
 
+      /* =========================================
+         TEAM MEMBERS
+      ========================================= */
+
       members: [
 
         {
@@ -43,6 +60,10 @@ const projectSchema =
           ref: "User",
         },
       ],
+
+      /* =========================================
+         PROJECT STATUS
+      ========================================= */
 
       status: {
 
@@ -60,6 +81,10 @@ const projectSchema =
         default: "planning",
       },
 
+      /* =========================================
+         PROJECT PRIORITY
+      ========================================= */
+
       priority: {
 
         type: String,
@@ -76,36 +101,75 @@ const projectSchema =
         default: "medium",
       },
 
+      /* =========================================
+         ASSIGNED DATE
+      ========================================= */
+
+      assignedDate: {
+
+        type: Date,
+
+        default: Date.now,
+      },
+
+      /* =========================================
+         DEADLINE DATE
+      ========================================= */
+
       deadline: {
 
         type: Date,
       },
 
+      /* =========================================
+         TAGS
+      ========================================= */
+
       tags: [
 
         {
+
           type: String,
         },
       ],
+
+      /* =========================================
+         PROJECT PROGRESS
+      ========================================= */
 
       progress: {
 
         type: Number,
 
         default: 0,
+
+        min: 0,
+
+        max: 100,
       },
+
+      /* =========================================
+         FILE ATTACHMENTS
+      ========================================= */
 
       files: [
 
         {
+
           name: String,
+
           url: String,
         },
       ],
 
+      /* =========================================
+         ACTIVITY LOGS
+      ========================================= */
+
       activityLogs: [
 
         {
+
           action: String,
 
           createdAt: {
@@ -116,6 +180,10 @@ const projectSchema =
           },
         },
       ],
+
+      /* =========================================
+         ARCHIVE STATUS
+      ========================================= */
 
       archived: {
 
@@ -133,6 +201,7 @@ const projectSchema =
   );
 
 const Project =
+
   mongoose.model(
 
     "Project",

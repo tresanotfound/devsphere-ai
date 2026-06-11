@@ -16,35 +16,96 @@ function CreateProject({
 
 }) {
 
-  const [name,
-    setName] =
-    useState("");
+  /* =========================================
+     FORM STATES
+  ========================================= */
 
-  const [description,
-    setDescription] =
-    useState("");
+  const [
+    name,
+    setName,
+  ] = useState("");
 
-  const [status,
-    setStatus] =
-    useState("planning");
+  const [
+    description,
+    setDescription,
+  ] = useState("");
 
-  const [priority,
-    setPriority] =
-    useState("medium");
+  const [
+    status,
+    setStatus,
+  ] = useState("planning");
 
-  const [deadline,
-    setDeadline] =
-    useState("");
+  const [
+    priority,
+    setPriority,
+  ] = useState("medium");
 
-  const [tags,
-    setTags] =
-    useState("");
+  /* =========================================
+     ASSIGNED DATE
+  ========================================= */
 
-  const [loading,
-    setLoading] =
-    useState(false);
+  const [
+    assignedDate,
+    setAssignedDate,
+  ] = useState("");
 
-  // CREATE PROJECT
+  /* =========================================
+     DEADLINE
+  ========================================= */
+
+  const [
+    deadline,
+    setDeadline,
+  ] = useState("");
+
+  /* =========================================
+     TAGS
+  ========================================= */
+
+  const [
+    tags,
+    setTags,
+  ] = useState("");
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(false);
+
+  /* =========================================
+     PROJECT DURATION
+  ========================================= */
+
+  const durationInDays =
+
+    assignedDate &&
+    deadline
+
+      ? Math.ceil(
+
+          (
+            new Date(deadline)
+
+            -
+
+            new Date(assignedDate)
+          )
+
+          /
+
+          (
+            1000 *
+            60 *
+            60 *
+            24
+          )
+        )
+
+      : null;
+
+  /* =========================================
+     CREATE PROJECT
+  ========================================= */
 
   const handleCreateProject =
     async (e) => {
@@ -71,15 +132,19 @@ function CreateProject({
               description,
               status,
               priority,
+              assignedDate,
               deadline,
 
               tags:
-                tags.split(",")
+                tags
+                  .split(",")
 
                   .map((tag) =>
 
                     tag.trim()
-                  ),
+                  )
+
+                  .filter(Boolean),
 
             },
 
@@ -93,23 +158,42 @@ function CreateProject({
             }
           );
 
+        /* =========================================
+           UPDATE UI
+        ========================================= */
+
         onProjectCreated(
 
           response.data.project
         );
 
-        // RESET FORM
+        /* =========================================
+           RESET FORM
+        ========================================= */
 
         setName("");
+
         setDescription("");
-        setStatus("planning");
-        setPriority("medium");
+
+        setStatus(
+          "planning"
+        );
+
+        setPriority(
+          "medium"
+        );
+
+        setAssignedDate("");
+
         setDeadline("");
+
         setTags("");
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          error
+        );
 
       } finally {
 
@@ -127,14 +211,16 @@ function CreateProject({
       "
     >
 
-      {/* HEADER */}
+      {/* =========================================
+         HEADER
+      ========================================= */}
 
       <div className="mb-8">
 
         <h2
           className="
-            text-3xl
-            font-bold
+            text-4xl
+            font-extrabold
             text-black
             dark:text-white
           "
@@ -144,9 +230,10 @@ function CreateProject({
 
         <p
           className="
-            mt-2
+            mt-3
             text-gray-600
             dark:text-gray-400
+            text-lg
           "
         >
           Build collaborative
@@ -155,7 +242,9 @@ function CreateProject({
 
       </div>
 
-      {/* FORM */}
+      {/* =========================================
+         FORM
+      ========================================= */}
 
       <form
 
@@ -171,170 +260,402 @@ function CreateProject({
         "
       >
 
-        {/* PROJECT NAME */}
+        {/* =========================================
+           PROJECT NAME
+        ========================================= */}
 
-        <input
+        <div className="space-y-2">
 
-          type="text"
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Project Name
+          </label>
 
-          placeholder="Project Name"
+          <input
 
-          value={name}
+            type="text"
 
-          onChange={(e) =>
+            placeholder="Enter project name"
 
-            setName(
-              e.target.value
-            )
-          }
+            value={name}
 
-          required
+            onChange={(e) =>
 
-          className="
-            glass-input
-          "
-        />
+              setName(
+                e.target.value
+              )
+            }
 
-        {/* DEADLINE */}
+            required
 
-        <input
+            className="
+              glass-input
+            "
+          />
 
-          type="date"
+        </div>
 
-          value={deadline}
+        {/* =========================================
+           ASSIGNED DATE
+        ========================================= */}
 
-          onChange={(e) =>
+        <div className="space-y-2">
 
-            setDeadline(
-              e.target.value
-            )
-          }
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Assigned Date
+          </label>
 
-          className="
-            glass-input
-          "
-        />
+          <input
 
-        {/* STATUS */}
+            type="date"
 
-        <select
+            value={assignedDate}
 
-          value={status}
+            onChange={(e) =>
 
-          onChange={(e) =>
+              setAssignedDate(
+                e.target.value
+              )
+            }
 
-            setStatus(
-              e.target.value
-            )
-          }
+            className="
+              glass-input
+            "
+          />
 
-          className="
-            glass-input
-          "
-        >
+        </div>
 
-          <option value="planning">
-            Planning
-          </option>
+        {/* =========================================
+           STATUS
+        ========================================= */}
 
-          <option value="active">
-            Active
-          </option>
+        <div className="space-y-2">
 
-          <option value="completed">
-            Completed
-          </option>
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Project Status
+          </label>
 
-          <option value="on-hold">
-            On Hold
-          </option>
+          <select
 
-        </select>
+            value={status}
 
-        {/* PRIORITY */}
+            onChange={(e) =>
 
-        <select
+              setStatus(
+                e.target.value
+              )
+            }
 
-          value={priority}
+            className="
+              glass-input
+            "
+          >
 
-          onChange={(e) =>
+            <option value="planning">
+              Planning
+            </option>
 
-            setPriority(
-              e.target.value
-            )
-          }
+            <option value="active">
+              Active
+            </option>
 
-          className="
-            glass-input
-          "
-        >
+            <option value="completed">
+              Completed
+            </option>
 
-          <option value="low">
-            Low
-          </option>
+            <option value="on-hold">
+              On Hold
+            </option>
 
-          <option value="medium">
-            Medium
-          </option>
+          </select>
 
-          <option value="high">
-            High
-          </option>
+        </div>
 
-          <option value="critical">
-            Critical
-          </option>
+        {/* =========================================
+           PRIORITY
+        ========================================= */}
 
-        </select>
+        <div className="space-y-2">
 
-        {/* TAGS */}
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Priority Level
+          </label>
 
-        <input
+          <select
 
-          type="text"
+            value={priority}
 
-          placeholder="Tags (comma separated)"
+            onChange={(e) =>
 
-          value={tags}
+              setPriority(
+                e.target.value
+              )
+            }
 
-          onChange={(e) =>
+            className="
+              glass-input
+            "
+          >
 
-            setTags(
-              e.target.value
-            )
-          }
+            <option value="low">
+              Low
+            </option>
 
-          className="
-            glass-input
-            md:col-span-2
-          "
-        />
+            <option value="medium">
+              Medium
+            </option>
 
-        {/* DESCRIPTION */}
+            <option value="high">
+              High
+            </option>
 
-        <textarea
+            <option value="critical">
+              Critical
+            </option>
 
-          rows="5"
+          </select>
 
-          placeholder="Project Description..."
+        </div>
 
-          value={description}
+        {/* =========================================
+           DEADLINE
+        ========================================= */}
 
-          onChange={(e) =>
+        <div className="space-y-2 md:col-span-2">
 
-            setDescription(
-              e.target.value
-            )
-          }
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Project Deadline
+          </label>
 
-          className="
-            glass-input
-            md:col-span-2
-            resize-none
-          "
-        />
+          <input
 
-        {/* BUTTON */}
+            type="date"
+
+            value={deadline}
+
+            onChange={(e) =>
+
+              setDeadline(
+                e.target.value
+              )
+            }
+
+            className="
+              glass-input
+            "
+          />
+
+        </div>
+
+        {/* =========================================
+           TAGS
+        ========================================= */}
+
+        <div className="space-y-2 md:col-span-2">
+
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Project Tags
+          </label>
+
+          <input
+
+            type="text"
+
+            placeholder="AI, SaaS, MERN, Dashboard"
+
+            value={tags}
+
+            onChange={(e) =>
+
+              setTags(
+                e.target.value
+              )
+            }
+
+            className="
+              glass-input
+            "
+          />
+
+        </div>
+
+        {/* =========================================
+           DESCRIPTION
+        ========================================= */}
+
+        <div className="space-y-2 md:col-span-2">
+
+          <label
+            className="
+              text-sm
+              font-semibold
+              text-gray-300
+            "
+          >
+            Project Description
+          </label>
+
+          <textarea
+
+            rows="5"
+
+            placeholder="Describe your project..."
+
+            value={description}
+
+            onChange={(e) =>
+
+              setDescription(
+                e.target.value
+              )
+            }
+
+            className="
+              glass-input
+              resize-none
+            "
+          />
+
+        </div>
+
+        {/* =========================================
+           DURATION DISPLAY
+        ========================================= */}
+
+        {
+
+          assignedDate &&
+          deadline &&
+          durationInDays >= 0 && (
+
+            <div
+              className="
+                md:col-span-2
+                p-6
+                rounded-3xl
+                bg-[#b9ff66]/10
+                border
+                border-[#b9ff66]/20
+              "
+            >
+
+              <h3
+                className="
+                  text-xl
+                  font-bold
+                  text-[#b9ff66]
+                "
+              >
+                ⏳ Project Timeline
+              </h3>
+
+              <div
+                className="
+                  mt-4
+                  space-y-2
+                  text-gray-300
+                "
+              >
+
+                <p>
+                  <span
+                    className="
+                      font-semibold
+                      text-white
+                    "
+                  >
+                    Assigned:
+                  </span>
+
+                  {" "}
+
+                  {
+
+                    new Date(
+                      assignedDate
+                    ).toLocaleDateString()
+                  }
+                </p>
+
+                <p>
+                  <span
+                    className="
+                      font-semibold
+                      text-white
+                    "
+                  >
+                    Deadline:
+                  </span>
+
+                  {" "}
+
+                  {
+
+                    new Date(
+                      deadline
+                    ).toLocaleDateString()
+                  }
+                </p>
+
+                <p
+                  className="
+                    text-[#b9ff66]
+                    font-bold
+                    text-lg
+                    mt-3
+                  "
+                >
+                  Duration:
+                  {" "}
+                  {durationInDays}
+                  {" "}
+                  Days
+                </p>
+
+              </div>
+
+            </div>
+          )
+        }
+
+        {/* =========================================
+           BUTTON
+        ========================================= */}
 
         <button
 
@@ -356,6 +677,7 @@ function CreateProject({
             rounded-2xl
             font-bold
             text-lg
+            disabled:opacity-70
           "
         >
 

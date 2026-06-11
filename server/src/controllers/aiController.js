@@ -1,3 +1,6 @@
+import AIHistory
+from "../models/AIHistory.js";
+
 import {
   generateInsightsAI,
 } from "../services/aiService.js";
@@ -9,10 +12,6 @@ import {
 import {
   generateCode,
 } from "../services/codeGeneratorService.js";
-
-import {
-  generateWorkflow,
-} from "../services/taskGeneratorService.js";
 
 import {
   generateAIResponse,
@@ -105,20 +104,56 @@ Respond in beautiful markdown.
 `;
 
       /* =========================================
-         AI GATEWAY
+         STREAMING AI RESPONSE
       ========================================= */
 
-      const response =
-        await generateAIResponse(
-          enhancedPrompt
-        );
+      let finalResponse = "";
 
-      return res.status(200).json({
+      await generateAIResponse(
 
-        success: true,
+        enhancedPrompt,
 
-        response,
-      });
+        async (chunk) => {
+
+          finalResponse += chunk;
+
+          res.write(chunk);
+        }
+      );
+
+      /* =========================================
+         SAVE AI HISTORY
+      ========================================= */
+
+      if (req.user?._id) {
+
+        await AIHistory.create({
+
+          user:
+            req.user._id,
+
+          prompt,
+
+          response:
+            finalResponse,
+
+          projectType:
+            "Blueprint Generator",
+
+          tags: [
+
+            "AI",
+            "Blueprint",
+            "Architecture",
+          ],
+        });
+      }
+
+      /* =========================================
+         END RESPONSE
+      ========================================= */
+
+      res.end();
 
     } catch (error) {
 
@@ -281,9 +316,11 @@ export const generateCodeAI =
       ========================================= */
 
       if (
+
         code.includes(
           "No matching template found"
         )
+
       ) {
 
         const aiPrompt = `
@@ -316,6 +353,52 @@ Requirements:
 
       console.error(
         "CODE GENERATOR ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+  /* =========================================
+   GET AI HISTORY
+========================================= */
+
+export const getAIHistory =
+  async (req, res) => {
+
+    try {
+
+      const history =
+        await AIHistory.find({
+
+          user:
+            req.user._id,
+        })
+
+        .sort({
+          createdAt: -1,
+        })
+
+        .limit(20);
+
+      return res.status(200).json({
+
+        success: true,
+
+        history,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "GET AI HISTORY ERROR:",
         error
       );
 

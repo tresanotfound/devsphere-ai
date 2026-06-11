@@ -9,6 +9,7 @@ import {
   updateProject,
   deleteProject,
   addMember,
+  updateProjectProgress,
 
 } from "../controllers/projectController.js";
 
@@ -21,7 +22,6 @@ const router = express.Router();
 
 /* =========================================
    CREATE PROJECT
-   POST /api/projects
 ========================================= */
 
 router.post(
@@ -36,8 +36,7 @@ router.post(
 
 
 /* =========================================
-   GET USER PROJECTS
-   GET /api/projects
+   GET PROJECTS
 ========================================= */
 
 router.get(
@@ -53,7 +52,6 @@ router.get(
 
 /* =========================================
    UPDATE PROJECT
-   PUT /api/projects/:id
 ========================================= */
 
 router.put(
@@ -68,8 +66,22 @@ router.put(
 
 
 /* =========================================
+   UPDATE PROJECT PROGRESS
+========================================= */
+
+router.put(
+
+  "/:id/progress",
+
+  protect,
+
+  updateProjectProgress
+);
+
+
+
+/* =========================================
    DELETE PROJECT
-   DELETE /api/projects/:id
 ========================================= */
 
 router.delete(
@@ -85,7 +97,6 @@ router.delete(
 
 /* =========================================
    ADD MEMBER
-   POST /api/projects/:id/members
 ========================================= */
 
 router.post(

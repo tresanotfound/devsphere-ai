@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 
 import {
   FiSend,
@@ -19,6 +18,10 @@ function AIPromptInput({
   const [loading, setLoading] =
     useState(false);
 
+  /* =========================================
+     STREAMING AI RESPONSE
+  ========================================= */
+
   const generateAIResponse =
     async () => {
 
@@ -29,35 +32,72 @@ function AIPromptInput({
 
         setLoading(true);
 
+        setResponse("");
+
         const token =
           localStorage.getItem(
             "token"
           );
 
-        const res =
-          await axios.post(
+        const response =
+          await fetch(
 
             "http://localhost:5000/api/ai/generate-tasks",
 
             {
-              prompt,
-            },
+              method: "POST",
 
-            {
               headers: {
+
+                "Content-Type":
+                  "application/json",
 
                 Authorization:
                   `Bearer ${token}`,
               },
+
+              body: JSON.stringify({
+
+                prompt,
+              }),
             }
           );
 
-        const aiResponse =
-          res.data.response;
+        /* =========================================
+           STREAM READER
+        ========================================= */
 
-        setResponse(
-          aiResponse
-        );
+        const reader =
+          response.body.getReader();
+
+        const decoder =
+          new TextDecoder();
+
+        let fullResponse = "";
+
+        while (true) {
+
+          const {
+            done,
+            value,
+          } = await reader.read();
+
+          if (done)
+            break;
+
+          const chunk =
+            decoder.decode(value);
+
+          fullResponse += chunk;
+
+          setResponse(
+            fullResponse
+          );
+        }
+
+        /* =========================================
+           SAVE HISTORY
+        ========================================= */
 
         setHistory([
 
@@ -65,7 +105,7 @@ function AIPromptInput({
             prompt,
 
             response:
-              aiResponse,
+              fullResponse,
 
             createdAt:
               new Date(),
@@ -82,9 +122,9 @@ function AIPromptInput({
         );
 
         setResponse(
-          `❌ AI Error
+`# ❌ AI Error
 
-${error.response?.data?.message || error.message}`
+${error.message}`
         );
 
       } finally {
@@ -102,6 +142,10 @@ ${error.response?.data?.message || error.message}`
         p-8
       "
     >
+
+      {/* =========================================
+         HEADER
+      ========================================= */}
 
       <div
         className="
@@ -155,6 +199,10 @@ ${error.response?.data?.message || error.message}`
 
       </div>
 
+      {/* =========================================
+         INPUT AREA
+      ========================================= */}
+
       <div className="space-y-6">
 
         <textarea
@@ -193,6 +241,10 @@ Design Hostel Management System
           "
         />
 
+        {/* =========================================
+           BUTTON
+        ========================================= */}
+
         <button
 
           onClick={
@@ -217,15 +269,18 @@ Design Hostel Management System
             gap-3
             hover:scale-[1.01]
             transition
+            disabled:opacity-60
           "
         >
 
           {
+
             loading
 
-              ? "Generating Blueprint..."
+              ? "AI is thinking..."
 
               : (
+
                 <>
                   <FiSend />
                   Generate AI Blueprint
@@ -242,3 +297,4 @@ Design Hostel Management System
 }
 
 export default AIPromptInput;
+
