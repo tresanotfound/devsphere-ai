@@ -1,4 +1,4 @@
-# DevSphere AI Backend 🚀
+# DevSphere AI Backend 
 
 Backend server for DevSphere AI — an AI-powered productivity and collaboration platform.
 
