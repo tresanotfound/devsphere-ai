@@ -54,7 +54,7 @@ function Tasks() {
       const response =
         await axios.get(
 
-          `${import.meta.env.VITE_API_URL}/api/tasks`,
+          `\${import.meta.env.VITE_API_URL}/api/tasks`,
 
           {
             headers: {
@@ -113,7 +113,7 @@ function Tasks() {
 
         await axios.delete(
 
-          '${import.meta.env.VITE_API_URL}/api/tasks/${taskId}`,
+          `${import.meta.env.VITE_API_URL}/api/tasks/${taskId}`,
 
           {
             headers: {
@@ -141,7 +141,7 @@ function Tasks() {
   // FILTER TASKS
 
   const filteredTasks =
-    tasks.filter((task) => {
+    (tasks || []).filter((task) => {
 
       const matchesStatus =
 

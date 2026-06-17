@@ -63,14 +63,10 @@ function Login() {
 
         setError("");
 
-        const { data } =
-          await axios.post(
-
-            `${import.meta.env.VITE_API_URL}/api/auth/login`,
-
-            formData
-
-          );
+        const { data } = await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/login`,
+  formData
+);
 
         login(
           data.user,

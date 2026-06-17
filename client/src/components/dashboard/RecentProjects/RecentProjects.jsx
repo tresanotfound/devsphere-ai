@@ -24,7 +24,7 @@ function RecentProjects() {
 
       <div className="space-y-4">
 
-        {projects.map((project, index) => (
+        {(projects || []).map((project, index) => (
 
           <div
             key={index}

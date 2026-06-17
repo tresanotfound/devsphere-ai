@@ -11,13 +11,13 @@ function NotesSidebar({
   // PINNED NOTES FIRST
 
   const pinnedNotes =
-    notes.filter(
+    (notes || []).filter(
 
       (note) => note.pinned
     );
 
   const regularNotes =
-    notes.filter(
+    (notes || []).filter(
 
       (note) => !note.pinned
     );

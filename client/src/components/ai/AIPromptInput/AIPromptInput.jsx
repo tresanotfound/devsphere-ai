@@ -42,7 +42,7 @@ function AIPromptInput({
         const response =
           await fetch(
 
-            `${import.meta.env.VITE_API_URL}/api/ai/generate-tasks`,
+            `\${import.meta.env.VITE_API_URL}/api/ai/generate-tasks`,
 
             {
               method: "POST",

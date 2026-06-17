@@ -29,7 +29,7 @@ function AIHistory({
           const res =
             await axios.get(
 
-              `${import.meta.env.VITE_API_URL}/api/ai/history`,
+              `\${import.meta.env.VITE_API_URL}/api/ai/history`,
 
               {
                 headers: {
@@ -114,7 +114,7 @@ function AIHistory({
 
       {
 
-        history.length === 0
+        (history || []).length === 0
 
           ? (
 

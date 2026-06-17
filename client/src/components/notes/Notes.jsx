@@ -59,7 +59,7 @@ function Notes() {
       const response =
         await axios.get(
 
-          `${import.meta.env.VITE_API_URL}/api/notes`,
+          `\${import.meta.env.VITE_API_URL}/api/notes`,
 
           {
             headers: {
@@ -141,7 +141,7 @@ function Notes() {
 
         await axios.delete(
 
-          `${import.meta.env.VITE_API_URL}/api/notes/${noteId}`,
+          `\${import.meta.env.VITE_API_URL}/api/notes/${noteId}`,
 
           {
             headers: {
@@ -169,7 +169,7 @@ function Notes() {
   // FILTERED NOTES
 
   const filteredNotes =
-    notes.filter((note) =>
+    (notes || []).filter((note) =>
 
       note.title
         .toLowerCase()

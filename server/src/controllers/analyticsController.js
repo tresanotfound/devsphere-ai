@@ -142,3 +142,17 @@ export const getDashboardAnalytics =
       });
     }
   };
+
+export const getAnalytics = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      analytics: [],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Analytics error",
+    });
+  }
+};

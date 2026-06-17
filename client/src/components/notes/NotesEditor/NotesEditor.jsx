@@ -95,7 +95,7 @@ function NotesEditor({
           const response =
             await axios.put(
 
-              `${import.meta.env.VITE_API_URL}/api/notes/${selectedNote._id}`,
+              `\${import.meta.env.VITE_API_URL}/api/notes/${selectedNote._id}`,
 
               noteData,
 
@@ -120,7 +120,7 @@ function NotesEditor({
           const response =
             await axios.post(
 
-              `${import.meta.env.VITE_API_URL}/api/notes`,
+              `\${import.meta.env.VITE_API_URL}/api/notes`,
 
               noteData,
 

@@ -1,165 +1,51 @@
-// client/src/components/analytics/PieChart/PieChart.jsx
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import {
+function PieChart() {
+  const [analytics, setAnalytics] = useState(null);
+  const [error, setError] = useState("");
 
-  PieChart as RePieChart,
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-  Pie,
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/analytics`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-  Cell,
+        setAnalytics(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load analytics");
+      }
+    };
 
-  Tooltip,
+    fetchAnalytics();
+  }, []);
 
-  ResponsiveContainer,
-
-  Legend,
-
-} from "recharts";
-
-function PieChart({
-
-  analytics,
-
-}) {
-
-  if (!analytics) return null;
-
-
-
-  /* =========================================
-     DATA
-  ========================================= */
-
-  const data = [
-
-    {
-
-      name:
-        "Completed",
-
-      value:
-        analytics.tasks.completed,
-    },
-
-    {
-
-      name:
-        "Pending",
-
-      value:
-        analytics.tasks.pending,
-    },
-  ];
-
-
-
-  /* =========================================
-     COLORS
-  ========================================= */
-
-  const COLORS = [
-
-    "#b9ff66",
-
-    "#facc15",
-  ];
-
-
+  if (error) {
+    return (
+      <div className="text-red-500 text-xl font-bold">
+        {error}
+      </div>
+    );
+  }
 
   return (
+    <div className="bg-[#111827] p-6 rounded-xl text-white">
+      <h2 className="text-2xl font-bold mb-4">
+        Pie Chart
+      </h2>
 
-    <div
-      className="
-        glass-card
-        p-7
-        rounded-3xl
-        h-[420px]
-      "
-    >
-
-      {/* HEADER */}
-
-      <div className="mb-6">
-
-        <h2
-          className="
-            text-3xl
-            font-bold
-            text-black
-            dark:text-white
-          "
-        >
-          Task Distribution
-        </h2>
-
-        <p
-          className="
-            mt-2
-            text-gray-600
-            dark:text-gray-400
-          "
-        >
-          Completed vs pending tasks
-        </p>
-
-      </div>
-
-
-
-      {/* CHART */}
-
-      <ResponsiveContainer
-        width="100%"
-        height="80%"
-      >
-
-        <RePieChart>
-
-          <Pie
-
-            data={data}
-
-            cx="50%"
-
-            cy="50%"
-
-            outerRadius={120}
-
-            dataKey="value"
-
-            label
-          >
-
-            {
-
-              data.map(
-
-                (
-                  entry,
-                  index
-                ) => (
-
-                  <Cell
-
-                    key={`cell-${index}`}
-
-                    fill={
-                      COLORS[index]
-                    }
-                  />
-                ))
-            }
-
-          </Pie>
-
-          <Tooltip />
-
-          <Legend />
-
-        </RePieChart>
-
-      </ResponsiveContainer>
-
+      <pre>
+        {JSON.stringify(analytics, null, 2)}
+      </pre>
     </div>
   );
 }

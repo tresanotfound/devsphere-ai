@@ -27,6 +27,4 @@ router.get(
   getDashboardAnalytics
 );
 
-
-
 export default router;

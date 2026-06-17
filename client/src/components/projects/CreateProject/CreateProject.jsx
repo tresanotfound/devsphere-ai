@@ -124,7 +124,7 @@ function CreateProject({
         const response =
           await axios.post(
 
-            `${import.meta.env.VITE_API_URL}/api/projects`,
+            `\${import.meta.env.VITE_API_URL}/api/projects`,
 
             {
 
